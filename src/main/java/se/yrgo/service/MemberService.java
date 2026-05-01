@@ -1,4 +1,9 @@
 package se.yrgo.service;
 
-public class MemberService {
+import se.yrgo.domain.Member;
+
+import java.util.List;
+
+public interface MemberService {
+    List<Member> getAllClubMembers();
 }
