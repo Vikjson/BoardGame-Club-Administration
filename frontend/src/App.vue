@@ -6,7 +6,8 @@ import GameRoundsView from './views/GameRoundsView.vue'
 import GameLibraryView from './views/GameLibraryView.vue'
 import StatisticsView from './views/StatisticsView.vue'
 
-const currentPage = ref('members')
+const currentPage = ref('member')
+
 
 </script>
 

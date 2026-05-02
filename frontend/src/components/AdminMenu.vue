@@ -1,8 +1,33 @@
 <template>
-  <nav>
-    <button @click="$emit('change-page', 'members')">Hantera medlemskap</button>
-    <button @click="$emit('change-page', 'rounds')">Registrera spelomgång</button>
-    <button @click="$emit('change-page', 'library')">Hantera spelbibliotek</button>
-    <button @click="$emit('change-page', 'statistics')">Visa statistik</button>
+  <nav class="admin-menu">
+    <button @click="$emit('change-page', 'members')">
+      Hantera medlemskap
+    </button>
+
+    <button @click="$emit('change-page', 'rounds')">
+      Registrera spelomgång
+    </button>
+
+    <button @click="$emit('change-page', 'library')">
+      Hantera spelbibliotek
+    </button>
+
+    <button @click="$emit('change-page', 'statistics')">
+      Visa statistik
+    </button>
   </nav>
 </template>
+
+<style scoped>
+.admin-menu {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #ddd;
+}
+
+button {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+</style>
