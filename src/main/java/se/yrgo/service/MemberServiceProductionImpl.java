@@ -1,5 +1,6 @@
 package se.yrgo.service;
 
+import jakarta.persistence.NoResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.yrgo.data.MemberDao;
@@ -19,5 +20,15 @@ public class MemberServiceProductionImpl implements MemberService{
     @Override
     public List<Member> getAllClubMembers() {
         return memberDao.getAllMembers();
+    }
+
+    @Override
+    public Member getById(int id) {
+        try {
+            return memberDao.getById(id);
+        }
+        catch (NoResultException e) {
+            throw new RuntimeException("The member with id " + id + " could not be found.");
+        }
     }
 }

@@ -8,7 +8,7 @@ import se.yrgo.domain.Member;
 import java.util.List;
 
 @Repository
-public class MemberDaoMssqlImpl implements MemberDao{
+public class MemberDaoMssqlImpl implements MemberDao {
     @PersistenceContext
     private EntityManager em;
 
@@ -17,4 +17,13 @@ public class MemberDaoMssqlImpl implements MemberDao{
         return em.createQuery("SELECT member FROM Member AS member", Member.class)
                 .getResultList();
     }
+
+    @Override
+    public Member getById(int id) {
+        return em.createQuery("SELECT member FROM Member AS member WHERE member.id = :id", Member.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
+
 }
