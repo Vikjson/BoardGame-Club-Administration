@@ -1,13 +1,16 @@
 package se.yrgo.servlet;
 
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * When running servlet, go to http://localhost:32772/boardgame-club-administration
+ */
 @WebServlet(name = "BoardgameServlet", urlPatterns = {"/boardgames"})
 public class BoardgameServlet extends HttpServlet {
     @Override
