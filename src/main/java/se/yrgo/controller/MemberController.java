@@ -1,6 +1,7 @@
 package se.yrgo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import se.yrgo.domain.Member;
 import se.yrgo.error.MemberNotFoundException;
@@ -17,11 +18,16 @@ public class MemberController {
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
-//
-//    @PostMapping
-//    public void saveMember(Member member){
-//
-//    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createMember(@RequestBody Member member){
+        try {
+            memberService.createMember(member);
+        } catch (Exception e) {
+            //Todo: error handling
+        }
+    }
 
     @GetMapping
     public List<Member> getAll() {
@@ -39,6 +45,7 @@ public class MemberController {
             throw new MemberNotFoundException(e);
         }
         catch (Exception e) {
+            //Todo: proper error handling
             throw new RuntimeException("There was an internal server error.");
         }
     }

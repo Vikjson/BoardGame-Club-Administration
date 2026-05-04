@@ -25,5 +25,11 @@ public class MemberDaoMssqlImpl implements MemberDao {
                 .getSingleResult();
     }
 
+    @Override
+    public void createMember(Member newMember) {
+        System.out.printf("-------------%nNew member to persist:%n%s", newMember);
+        em.persist(newMember);
+    }
+
 
 }
