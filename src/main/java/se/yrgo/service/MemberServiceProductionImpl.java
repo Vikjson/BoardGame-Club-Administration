@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.yrgo.data.MemberDao;
 import se.yrgo.domain.Member;
+import se.yrgo.error.MemberNotFoundException;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class MemberServiceProductionImpl implements MemberService{
             return memberDao.getById(id);
         }
         catch (NoResultException e) {
-            throw new RuntimeException("The member with id " + id + " could not be found.");
+            throw new MemberNotFoundException("The member with id " + id + " could not be found.");
         }
     }
 }
