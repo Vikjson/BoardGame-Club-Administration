@@ -37,11 +37,36 @@ public class MemberServiceProductionImpl implements MemberService{
     }
 
     @Override
+    public Member getByEmail(String email) {
+        try {
+            return memberDao.getByEmail(email);
+        }
+        catch (NoResultException e) {
+            throw new MemberNotFoundException("The member with email " + email + " could not be found.");
+        }
+    }
+
+    @Override
     public void createMember(Member newMember) {
         try {
             memberDao.createMember(newMember);
         } catch (EntityExistsException e) {
             throw new RuntimeException("This member already exists.", e);
         }
+    }
+
+    @Override
+    public void deleteMemberByEmail(String email) {
+        try {
+            Member memberToDelete = getByEmail(email);
+            memberDao.deleteMember(memberToDelete);
+        } catch (MemberNotFoundException e){
+            throw new MemberNotFoundException("Unable to delete:" + e.getMessage());
+        }
+    }
+
+    @Override
+    public void updateMember(Member memberToUpdate) {
+
     }
 }

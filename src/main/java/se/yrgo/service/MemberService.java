@@ -8,4 +8,8 @@ public interface MemberService {
     List<Member> getAllClubMembers();
     Member getById(int id);
     void createMember(Member newMember);
+    void deleteMemberByEmail(String email);
+    void updateMember(Member memberToUpdate);
+    Member getByEmail(String email);
+
 }

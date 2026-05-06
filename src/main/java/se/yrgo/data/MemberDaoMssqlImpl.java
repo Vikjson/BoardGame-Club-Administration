@@ -26,10 +26,24 @@ public class MemberDaoMssqlImpl implements MemberDao {
     }
 
     @Override
+    public Member getByEmail(String email) {
+        return em.createQuery("SELECT member FROM Member AS member WHERE member.email = :email", Member.class)
+                .setParameter("email", email)
+                .getSingleResult();
+    }
+
+    @Override
     public void createMember(Member newMember) {
-        System.out.printf("-------------%nNew member to persist:%n%s", newMember);
         em.persist(newMember);
     }
 
+    @Override
+    public void deleteMember(Member memberToDelete) {
+        em.remove(memberToDelete);
+    }
 
+    @Override
+    public void updateMember(Member memberToUpdate) {
+
+    }
 }
