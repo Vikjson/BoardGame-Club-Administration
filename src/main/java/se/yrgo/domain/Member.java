@@ -93,6 +93,26 @@ public class Member {
         return age;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setMembershipFeePaid(boolean membershipFeePaid) {
+        this.membershipFeePaid = membershipFeePaid;
+    }
+
+    public void setTotalWins(int totalWins) {
+        this.totalWins = totalWins;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     /**
      * For debugging. TODO: delete later!
      *

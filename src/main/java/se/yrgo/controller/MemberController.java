@@ -74,14 +74,19 @@ public class MemberController {
         memberService.deleteMember(id);
     }
 
-    @PutMapping("/{email}")
-    public void updateMemberByEmail(
-            @PathVariable String email,
+    @PutMapping("/{id}")
+    public void updateMember(
+            @PathVariable int id,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) boolean membershipFeePaid,
-            @RequestParam(required = false) int totalWins,
-            @RequestParam(required = false) int age
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) Boolean membershipFeePaid,
+            @RequestParam(required = false) Integer totalWins,
+            @RequestParam(required = false) Integer age
     ) {
+        if (id < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'id' parameter.");
+        }
 
+        memberService.updateMember(id, name, email, membershipFeePaid, totalWins, age);
     }
 }

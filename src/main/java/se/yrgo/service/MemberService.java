@@ -13,7 +13,7 @@ public interface MemberService {
 
     void deleteMember(int id);
 
-    void updateMember(Member memberToUpdate);
-
     Member getByEmail(String email);
+
+    void updateMember(int id, String name, String email, Boolean membershipFeePaid, Integer totalWins, Integer age);
 }

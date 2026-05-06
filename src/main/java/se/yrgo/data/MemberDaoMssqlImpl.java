@@ -44,6 +44,6 @@ public class MemberDaoMssqlImpl implements MemberDao {
 
     @Override
     public void updateMember(Member memberToUpdate) {
-
+        em.merge(memberToUpdate);
     }
 }
