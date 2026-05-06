@@ -3,6 +3,7 @@ package se.yrgo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import se.yrgo.domain.Member;
 import se.yrgo.error.MemberNotFoundException;
 import se.yrgo.service.MemberService;
@@ -18,6 +19,7 @@ public class MemberController {
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
+
     @GetMapping
     public List<Member> getAll() {
         return memberService.getAllClubMembers();
@@ -25,27 +27,29 @@ public class MemberController {
 
     @GetMapping("id/{id}")
     public Member getById(@PathVariable int id) {
+        if (id < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'id' parameter.");
+        }
+
         try {
             Member member = memberService.getById(id);
             return member;
-        }
-        catch (MemberNotFoundException e) {
+        } catch (MemberNotFoundException e) {
             System.err.println(e.getMessage());
             throw new MemberNotFoundException(e);
-        }
-        catch (Exception e) {
-            //Todo: proper error handling
-            throw new RuntimeException("There was an internal server error.");
         }
     }
 
     @GetMapping("email/{email}")
     public Member getByEmail(@PathVariable String email) {
+        if (!email.contains("@")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email parameter.");
+        }
+
         try {
             Member member = memberService.getByEmail(email);
             return member;
-        }
-        catch (MemberNotFoundException e) {
+        } catch (MemberNotFoundException e) {
             System.err.println(e.getMessage());
             throw new MemberNotFoundException(e);
         }
@@ -53,19 +57,31 @@ public class MemberController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createMember(@RequestBody Member newMember){
-        try {
-            memberService.createMember(newMember);
-        } catch (Exception e) {
-            e.printStackTrace();
-            //Todo: error handling
+    public void createMember(@RequestBody Member newMember) {
+        if (newMember.getId() != 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client is trying to set a value on readonly param 'id'");
         }
+
+        memberService.createMember(newMember);
     }
 
-    @DeleteMapping("/{email}")
-    public void deleteMemberByEmail(@PathVariable String email){
-        memberService.deleteMemberByEmail(email);
+    @DeleteMapping("/{id}")
+    public void deleteMember(@PathVariable int id) {
+        if (id < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'id' parameter.");
+        }
+
+        memberService.deleteMember(id);
     }
 
+    @PutMapping("/{email}")
+    public void updateMemberByEmail(
+            @PathVariable String email,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) boolean membershipFeePaid,
+            @RequestParam(required = false) int totalWins,
+            @RequestParam(required = false) int age
+    ) {
 
+    }
 }

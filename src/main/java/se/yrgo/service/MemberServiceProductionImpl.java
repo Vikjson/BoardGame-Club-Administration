@@ -56,9 +56,9 @@ public class MemberServiceProductionImpl implements MemberService{
     }
 
     @Override
-    public void deleteMemberByEmail(String email) {
+    public void deleteMember(int id) {
         try {
-            Member memberToDelete = getByEmail(email);
+            Member memberToDelete = getById(id);
             memberDao.deleteMember(memberToDelete);
         } catch (MemberNotFoundException e){
             throw new MemberNotFoundException("Unable to delete:" + e.getMessage());
