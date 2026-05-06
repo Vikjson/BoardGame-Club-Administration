@@ -10,7 +10,7 @@ echo "Pulling SQL Server docker image"
 docker pull "$DB_IMAGE_WITH_VERSION"
 fi
 
-docker run --name "$MSSQL_CONTAINER_NAME" -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$DB_PASSWORD" -e "MSSQL_PID=Express" -p 1433:1433 -d "$DB_IMAGE_WITH_VERSION"
+docker run --name "$MSSQL_CONTAINER_NAME" -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=$DB_PASSWORD" -e "MSSQL_PID=Express" -p 1433:1433 -d "$DB_IMAGE_WITH_VERSION"
 
 if ! docker images | grep -q "tomcat"; then
 echo "Pulling Tomcat docker image"
