@@ -12,7 +12,7 @@ public interface GameSessionDao {
 
     List<GameSession> getByGameId(int gameId);
 
-    List<GameSession> findByDate(LocalDate date);
+    List<GameSession> getByDate(LocalDate date);
 
     void create(GameSession session);
 

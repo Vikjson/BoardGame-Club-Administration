@@ -35,10 +35,10 @@ public class GameSessionDaoMssqlImpl implements GameSessionDao{
     }
 
     @Override
-    public List<GameSession> findByDate(LocalDate date) {
+    public List<GameSession> getByDate(LocalDate date) {
         return em.createQuery("SELECT gameSession FROM GameSession AS gameSession WHERE gameSession.date = :date", GameSession.class )
-        .setParameter("date", date)
-        .getResultList();
+                .setParameter("date", date)
+                .getResultList();
     }
 
     @Override

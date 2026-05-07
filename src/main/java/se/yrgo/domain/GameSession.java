@@ -19,7 +19,7 @@ public class GameSession {
     @Column(name = "sessionId")
     private int sessionId;
 
-    /* 
+
     @ManyToOne
     @JoinColumn(name = "gameId")
     private Game game;
@@ -82,6 +82,6 @@ public class GameSession {
                 '}';
     }
 
-    */
+
 
 }

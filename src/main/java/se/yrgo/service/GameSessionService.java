@@ -13,11 +13,12 @@ public interface GameSessionService {
 
     List<GameSession> getByGameId(int gameId);
 
-    List<GameSession> findByDate(LocalDate date);
+    List<GameSession> getByDate(LocalDate date);
 
-    void create(GameSession session);
+    void createGameSession(GameSession session);
 
-    void update(GameSession session);
+    void updateGameSession(int id, Integer gameId, LocalDate date);
 
-    void delete(int id);
+    void deleteGameSession(int id);
+
 }

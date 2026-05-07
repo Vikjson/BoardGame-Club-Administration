@@ -28,8 +28,7 @@ public class GameSessionServiceProductionImpl implements GameSessionService {
     public GameSession getById(int id) {
         try {
             return gameSessionDao.getById(id);
-        }
-        catch (NoResultException e) {
+        } catch (NoResultException e) {
             throw new RuntimeException("The game session with id " + id + " could not be found.");
         }
     }
@@ -40,26 +39,37 @@ public class GameSessionServiceProductionImpl implements GameSessionService {
     }
 
     @Override
-    public List<GameSession> findByDate(LocalDate date) {
-        return gameSessionDao.findByDate(date);
+    public List<GameSession> getByDate(LocalDate date) {
+        return gameSessionDao.getByDate(date);
     }
 
+
     @Override
-    public void create(GameSession session) {
+    public void createGameSession(GameSession session) {
         gameSessionDao.create(session);
     }
 
     @Override
-    public void update(GameSession session) {
+    public void updateGameSession(int id, Integer gameId, LocalDate date) {
+        GameSession session = gameSessionDao.getById(id);
+
+        if (date != null) {
+            session.setDate(date);
+        }
+
+        if (gameId != null) {
+            Game game = gameDao.getById(gameId);
+            session.setGame(game);
+        }
+
         gameSessionDao.update(session);
     }
 
     @Override
-    public void delete(int id) {
+    public void deleteGameSession(int id) {
         try {
             gameSessionDao.delete(id);
-        }
-        catch (NoResultException e) {
+        } catch (NoResultException e) {
             throw new RuntimeException("The game session with id " + id + " could not be deleted because it does not exist.");
         }
     }
