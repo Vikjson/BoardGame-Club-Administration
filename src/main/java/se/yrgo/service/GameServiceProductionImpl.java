@@ -10,13 +10,13 @@ import java.util.List;
 
 @Service("gameService")
 @Transactional
-public class GamServiceProductionImpl implements GameService{
+public class GameServiceProductionImpl implements GameService{
 
     @Autowired
     private GameDao gameDao;
 
     @Autowired
-    public GamServiceProductionImpl(GameDao gameDao) {
+    public GameServiceProductionImpl(GameDao gameDao) {
         this.gameDao = gameDao;
     }
     @Override
