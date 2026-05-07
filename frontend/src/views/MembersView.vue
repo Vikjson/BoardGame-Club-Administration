@@ -1,0 +1,189 @@
+<script setup>
+import { ref, computed } from 'vue'
+
+const members = ref([
+  { id: 1, firstName: 'Anna', lastName: 'Andersson', email: 'anna@mail.com', paid: true },
+  { id: 2, firstName: 'Bo', lastName: 'Bengtsson', email: 'bo@mail.com', paid: false }
+])
+
+const showForm = ref(false)
+const editingId = ref(null)
+const showOnlyUnpaid = ref(false)
+
+const formMember = ref({
+  firstName: '',
+  lastName: '',
+  email: '',
+  paid: false
+})
+
+const visibleMembers = computed(() => {
+  if (!showOnlyUnpaid.value) {
+    return members.value
+  }
+
+  return members.value.filter(member => !member.paid)
+})
+
+function openAddForm() {
+  editingId.value = null
+  formMember.value = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    paid: false
+  }
+  showForm.value = true
+}
+
+function openEditForm(member) {
+  editingId.value = member.id
+  formMember.value = { ...member }
+  showForm.value = true
+}
+
+function saveMember() {
+  if (editingId.value === null) {
+    members.value.push({
+      id: Date.now(),
+      ...formMember.value
+    })
+  } else {
+    const index = members.value.findIndex(member => member.id === editingId.value)
+
+    members.value[index] = {
+      id: editingId.value,
+      ...formMember.value
+    }
+  }
+
+  closeForm()
+}
+
+function deleteMember(memberId) {
+  members.value = members.value.filter(member => member.id !== memberId)
+}
+
+function closeForm() {
+  showForm.value = false
+  editingId.value = null
+}
+</script>
+
+<template>
+  <section class="members-view">
+    <h2>Hantera medlemskap</h2>
+
+    <div class="actions">
+      <button @click="openAddForm">Lägg till medlem</button>
+      <button @click="showOnlyUnpaid = !showOnlyUnpaid">
+        {{ showOnlyUnpaid ? 'Visa alla' : 'Visa obetalda' }}
+      </button>
+    </div>
+
+    <form v-if="showForm" class="member-form" @submit.prevent="saveMember">
+      <h3>{{ editingId === null ? 'Lägg till medlem' : 'Redigera medlem' }}</h3>
+
+      <label>
+        Förnamn
+        <input v-model="formMember.firstName" type="text" required>
+      </label>
+
+      <label>
+        Efternamn
+        <input v-model="formMember.lastName" type="text" required>
+      </label>
+
+      <label>
+        Email
+        <input v-model="formMember.email" type="email" required>
+      </label>
+
+      <label class="checkbox-label">
+        <input v-model="formMember.paid" type="checkbox">
+        Har betalat medlemskapet
+      </label>
+
+      <div class="form-actions">
+        <button type="submit">Spara</button>
+        <button type="button" @click="closeForm">Avbryt</button>
+      </div>
+    </form>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Namn</th>
+        <th>Email</th>
+        <th>Betalat</th>
+        <th>Åtgärder</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr v-for="member in visibleMembers" :key="member.id">
+        <td>{{ member.firstName }} {{ member.lastName }}</td>
+        <td>{{ member.email }}</td>
+        <td>{{ member.paid ? 'Ja' : 'Nej' }}</td>
+        <td>
+          <button @click="openEditForm(member)">Redigera</button>
+          <button @click="deleteMember(member.id)">Ta bort</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+</template>
+
+<style scoped>
+.members-view {
+  padding: 2rem;
+}
+
+.actions,
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.member-form {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+input {
+  margin-top: 0.25rem;
+  width: 200px;
+}
+
+.checkbox-label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.checkbox-label input {
+  margin-top: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+</style>
