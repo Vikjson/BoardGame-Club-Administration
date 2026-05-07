@@ -1,12 +1,18 @@
 #!/bin/bash
-CONTAINER_NAME="tomcat-container"
+TOMCAT_CONTAINER_NAME="tomcat-container"
+MSSQL_CONTAINER_NAME="mssql-boardgames"
 WAR_FILE="boardgame-club-administration.war"
 
 mvn clean package
 
-if ! docker ps | grep -q "$CONTAINER_NAME"; then
-    docker start "$CONTAINER_NAME"
+if ! docker ps | grep -q "$MSSQL_CONTAINER_NAME"; then
+    docker start "$MSSQL_CONTAINER_NAME"
 fi
 
-docker cp target/"$WAR_FILE" "$CONTAINER_NAME":/usr/local/tomcat/webapps/
-docker restart "$CONTAINER_NAME"
+
+if ! docker ps | grep -q "$TOMCAT_CONTAINER_NAME"; then
+    docker start "$TOMCAT_CONTAINER_NAME"
+fi
+
+docker cp target/"$WAR_FILE" "$TOMCAT_CONTAINER_NAME":/usr/local/tomcat/webapps/
+docker restart "$TOMCAT_CONTAINER_NAME"
