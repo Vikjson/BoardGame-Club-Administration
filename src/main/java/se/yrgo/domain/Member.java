@@ -10,7 +10,7 @@ import org.jspecify.annotations.NonNull;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int memberId;
 
     @Column(nullable = false)
     private String name;
@@ -53,15 +53,15 @@ public class Member {
      * Constructs a Member object, complete with all properties. Use when sending data to a client who needs the ID value
      * of the Member.
      *
-     * @param id
+     * @param memberId
      * @param name
      * @param email
      * @param membershipFeePaid
      * @param totalWins
      * @param age
      */
-    public Member(int id, String name, String email, boolean membershipFeePaid, int totalWins, int age) {
-        this.id = id;
+    public Member(int memberId, String name, String email, boolean membershipFeePaid, int totalWins, int age) {
+        this.memberId = memberId;
         this.name = name;
         this.email = email;
         this.membershipFeePaid = membershipFeePaid;
@@ -69,8 +69,8 @@ public class Member {
         this.age = age;
     }
 
-    public int getId() {
-        return id;
+    public int getMemberId() {
+        return memberId;
     }
 
     public String getName() {
@@ -121,7 +121,7 @@ public class Member {
     @Override
     public String toString() {
         return "Member{" +
-                "id=" + id +
+                "id=" + memberId +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", membershipFeePaid=" + membershipFeePaid +

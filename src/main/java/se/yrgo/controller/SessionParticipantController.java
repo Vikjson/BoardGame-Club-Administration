@@ -54,7 +54,7 @@ public class SessionParticipantController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createSessionParticipant(@RequestBody SessionParticipant newSessionParticipant) {
-        if (newSessionParticipant.getId()!= 0) {
+        if (newSessionParticipant.getId() != 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client is trying to set a value on readonly param 'id'");
         }
 

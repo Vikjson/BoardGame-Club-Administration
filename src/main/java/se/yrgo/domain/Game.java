@@ -9,7 +9,6 @@ import java.util.List;
 public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private int gameId;
 
     private String gameName;

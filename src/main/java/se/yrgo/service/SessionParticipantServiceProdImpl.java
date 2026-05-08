@@ -82,16 +82,18 @@ public class SessionParticipantServiceProdImpl implements SessionParticipantServ
     public void deleteSessionParticipant(int id) {
         SessionParticipant sessionParticipantToDelete = sessionParticipantDao.getById(id);
         if (sessionParticipantToDelete == null) {
-            throw new EntityNotFoundException("SessionParticipant not found");
+            throw new EntityNotFoundException("Session participant not found");
         }
         sessionParticipantDao.deleteSessionParticipant(sessionParticipantToDelete);
     }
 
     @Override
     public List<SessionParticipant> getAllSessionParticipants() {
-        if (getAllSessionParticipants().isEmpty()) {
-            throw new EntityNotFoundException("SessionParticipant not found");
+        List<SessionParticipant> participants = sessionParticipantDao.getAllSessionParticipants();
+
+        if (participants.isEmpty()) {
+            throw new EntityNotFoundException("Session participants not found");
         }
-        return sessionParticipantDao.getAllSessionParticipants();
+        return participants;
     }
 }

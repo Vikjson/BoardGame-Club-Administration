@@ -58,7 +58,7 @@ public class MemberController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createMember(@RequestBody Member newMember) {
-        if (newMember.getId() != 0) {
+        if (newMember.getMemberId() != 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client is trying to set a value on readonly param 'id'");
         }
 
