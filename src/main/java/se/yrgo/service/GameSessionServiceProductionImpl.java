@@ -4,6 +4,7 @@ import jakarta.persistence.NoResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.yrgo.data.GameSessionDao;
+import se.yrgo.domain.Game;
 import se.yrgo.domain.GameSession;
 
 import java.time.LocalDate;
