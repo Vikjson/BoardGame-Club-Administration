@@ -28,7 +28,8 @@ public class GameDaoMssqlImpl implements GameDao {
     @Override
     public Game findGameByName(String name) {
         return em.createQuery("SELECT game FROM Game AS game WHERE game.gameName = :gameName", Game.class)
-                .getSingleResult();
+            .setParameter("gameName", name)    
+            .getSingleResult();
     }
 
     @Override
