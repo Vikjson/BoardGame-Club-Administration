@@ -2,15 +2,9 @@ package se.yrgo.domain;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 @Entity
 public class GameSession {
@@ -71,7 +65,7 @@ public class GameSession {
     
 
     public void addParticipant(Member member, int score, boolean winner) {
-        SessionParticipant participant = new SessionParticipant(member, this, score, winner);
+        SessionParticipant participant = new SessionParticipant(member.getMemberId(), sessionId, score, winner);
 
         participants.add(participant);
     }

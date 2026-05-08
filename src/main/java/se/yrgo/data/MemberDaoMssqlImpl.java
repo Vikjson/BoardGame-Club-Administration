@@ -20,7 +20,7 @@ public class MemberDaoMssqlImpl implements MemberDao {
 
     @Override
     public Member getById(int id) {
-        return em.createQuery("SELECT member FROM Member AS member WHERE member.id = :id", Member.class)
+        return em.createQuery("SELECT member FROM Member AS member WHERE member.memberId = :id", Member.class)
                 .setParameter("id", id)
                 .getSingleResult();
     }
