@@ -61,7 +61,7 @@ public class GameSession {
     
 
     public void addParticipant(Member member, int score, boolean winner) {
-        SessionParticipant participant = new SessionParticipant(member, this, score, winner);
+        SessionParticipant participant = new SessionParticipant(member.getId(), sessionId, score, winner);
 
         participants.add(participant);
     }
