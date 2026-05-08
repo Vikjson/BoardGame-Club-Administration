@@ -12,7 +12,7 @@ import se.yrgo.service.SessionParticipantService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/sessionpatricipants")
+@RequestMapping("/sessionparticipants")
 public class SessionParticipantController {
     private SessionParticipantService sessionParticipantService;
 
@@ -40,7 +40,7 @@ public class SessionParticipantController {
         if (memberId < 1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'memberId' parameter.");
         }
-        return sessionParticipantService.getByMemberId(memberID);
+        return sessionParticipantService.getByMemberId(memberId);
     }
 
     @GetMapping("session/{sessionId}")
@@ -48,7 +48,7 @@ public class SessionParticipantController {
         if (sessionId < 1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'sessionId' parameter.");
         }
-        return sessionParticipantService.getBySessionId();
+        return sessionParticipantService.getBySessionId(sessionId);
     }
 
     @PostMapping
