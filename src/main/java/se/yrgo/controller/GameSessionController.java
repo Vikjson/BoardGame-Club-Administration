@@ -49,7 +49,7 @@ public class GameSessionController {
     public List<GameSession> getByDate(@PathVariable String date) {
         try {
             LocalDate localDate = LocalDate.parse(date);
-            return gameSessionService.findByDate(localDate);
+            return gameSessionService.getByDate(localDate);
         } catch (DateTimeParseException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,

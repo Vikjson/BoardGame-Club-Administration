@@ -15,7 +15,7 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class GameSession {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sessionId")
     private int sessionId;
 
@@ -26,9 +26,12 @@ public class GameSession {
 
     @Column(name = "date", nullable = false)
     private LocalDate date;
+    /* 
 
     @OneToMany(mappedBy = "gameSession", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SessionParticipant> participants = new ArrayList<>();
+
+     */
 
     public GameSession() {
     }
@@ -59,6 +62,7 @@ public class GameSession {
         this.date = date;
     }
 
+    /* 
    
     public List<SessionParticipant> getParticipants() {
         return participants;
@@ -72,16 +76,7 @@ public class GameSession {
         participants.add(participant);
     }
 
-    //Ska man göra denna metoden som JSON-fomrmat??
-    @Override
-    public String toString() {
-        return "GameSession:{" +
-                "sessionId:" + sessionId +
-                ", game:" + (game != null ? game.getGameName() : "No game") +
-                ", date:" + date +
-                '}';
-    }
-
+*/
 
 
 }

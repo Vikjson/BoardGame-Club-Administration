@@ -3,7 +3,10 @@ package se.yrgo.service;
 import jakarta.persistence.NoResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import se.yrgo.data.GameDao;
 import se.yrgo.data.GameSessionDao;
+import se.yrgo.domain.Game;
 import se.yrgo.domain.GameSession;
 
 import java.time.LocalDate;
@@ -13,10 +16,12 @@ import java.util.List;
 public class GameSessionServiceProductionImpl implements GameSessionService {
 
     private GameSessionDao gameSessionDao;
+    private GameDao gameDao;
 
     @Autowired
-    public GameSessionServiceProductionImpl(GameSessionDao gameSessionDao) {
+    public GameSessionServiceProductionImpl(GameSessionDao gameSessionDao, GameDao gameDao) {
         this.gameSessionDao = gameSessionDao;
+        this.gameDao = gameDao;
     }
 
     @Override
@@ -58,7 +63,7 @@ public class GameSessionServiceProductionImpl implements GameSessionService {
         }
 
         if (gameId != null) {
-            Game game = gameDao.getById(gameId);
+            Game game = gameDao.findGameById(gameId);
             session.setGame(game);
         }
 
