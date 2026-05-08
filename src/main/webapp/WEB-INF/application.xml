@@ -48,4 +48,10 @@
     <!--    <aop:aspectj-autoproxy/>-->
     <tx:annotation-driven/>
     <context:component-scan base-package="se.yrgo.data, se.yrgo.domain, se.yrgo.service"/>
+
+<!--    <mvc:cors>-->
+<!--        <mvc:mapping path="/**"-->
+<!--                     allowed-origins="http://localhost:5173"-->
+<!--                     allowed-methods="GET, PUT, POST, DELETE"/>-->
+<!--    </mvc:cors>-->
 </beans>
