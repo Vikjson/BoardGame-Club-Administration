@@ -1,20 +1,26 @@
 <script setup>
 import { ref, computed } from 'vue'
+import MemberService from "../service/MemberService.js";
 
-const members = ref([
-  { id: 1, firstName: 'Anna', lastName: 'Andersson', email: 'anna@mail.com', paid: true },
-  { id: 2, firstName: 'Bo', lastName: 'Bengtsson', email: 'bo@mail.com', paid: false }
-])
+// const members = ref([
+//   { id: 1, firstName: 'Anna', lastName: 'Andersson', email: 'anna@mail.com', paid: true },
+//   { id: 2, firstName: 'Bo', lastName: 'Bengtsson', email: 'bo@mail.com', paid: false }
+// ])
+
+const members = ref([])
+getMembers();
 
 const showForm = ref(false)
 const editingId = ref(null)
 const showOnlyUnpaid = ref(false)
 
 const formMember = ref({
-  firstName: '',
-  lastName: '',
+  id: '',
+  name: '',
+  totalWins: '',
   email: '',
-  paid: false
+  paid: false,
+  age: '',
 })
 
 const visibleMembers = computed(() => {
@@ -22,8 +28,13 @@ const visibleMembers = computed(() => {
     return members.value
   }
 
-  return members.value.filter(member => !member.paid)
+  return members.value.filter(member => !member.membershipFeePaid)
 })
+
+async function getMembers(){
+  const memberService = new MemberService();
+  members.value = await memberService.getAll();
+}
 
 function openAddForm() {
   editingId.value = null
@@ -121,13 +132,13 @@ function closeForm() {
       </thead>
 
       <tbody>
-      <tr v-for="member in visibleMembers" :key="member.id">
-        <td>{{ member.firstName }} {{ member.lastName }}</td>
+      <tr v-for="member in visibleMembers" :key="member.memberId">
+        <td>{{ member.name }}</td>
         <td>{{ member.email }}</td>
-        <td>{{ member.paid ? 'Ja' : 'Nej' }}</td>
+        <td>{{ member.membershipFeePaid ? 'Ja' : 'Nej' }}</td>
         <td>
           <button @click="openEditForm(member)">Redigera</button>
-          <button @click="deleteMember(member.id)">Ta bort</button>
+          <button @click="deleteMember(member.memberId)">Ta bort</button>
         </td>
       </tr>
       </tbody>
