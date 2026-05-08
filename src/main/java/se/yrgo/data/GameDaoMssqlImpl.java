@@ -8,7 +8,7 @@ import se.yrgo.domain.Game;
 import java.util.List;
 
 @Repository
-public class GameDaoMssqlIpl implements GameDao {
+public class GameDaoMssqlImpl implements GameDao {
     @PersistenceContext
     private EntityManager em;
 
