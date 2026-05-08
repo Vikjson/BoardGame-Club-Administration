@@ -8,7 +8,7 @@ import se.yrgo.domain.Game;
 import java.util.List;
 
 @Repository
-public class GameDaoMssqlIpl implements GameDao {
+public class GameDaoMssqlImpl implements GameDao {
     @PersistenceContext
     private EntityManager em;
 
@@ -28,7 +28,8 @@ public class GameDaoMssqlIpl implements GameDao {
     @Override
     public Game findGameByName(String name) {
         return em.createQuery("SELECT game FROM Game AS game WHERE game.gameName = :gameName", Game.class)
-                .getSingleResult();
+            .setParameter("gameName", name)    
+            .getSingleResult();
     }
 
     @Override

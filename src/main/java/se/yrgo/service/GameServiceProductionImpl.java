@@ -11,8 +11,6 @@ import java.util.List;
 @Service("gameService")
 @Transactional
 public class GameServiceProductionImpl implements GameService{
-
-    @Autowired
     private GameDao gameDao;
 
     @Autowired
