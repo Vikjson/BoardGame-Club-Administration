@@ -109,4 +109,60 @@ public class Game {
     public String getDescription() {
         return description;
     }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
+
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
+    }
+
+    public LocalDate getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(LocalDate purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
+
+    public int getTotalPlayers() {
+        return totalPlayers;
+    }
+
+    public void setTotalPlayers(int totalPlayers) {
+        this.totalPlayers = totalPlayers;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setRecommendedAge(int recommendedAge) {
+        this.recommendedAge = recommendedAge;
+    }
+
+    public int getAveragePlayTime() {
+        return averagePlayTime;
+    }
+
+    public void setAveragePlayTime(int averagePlayTime) {
+        this.averagePlayTime = averagePlayTime;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getMemberComment() {
+        return memberComment;
+    }
+
+    public void setMemberComment(String memberComment) {
+        this.memberComment = memberComment;
+    }
 }

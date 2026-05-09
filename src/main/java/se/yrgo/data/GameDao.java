@@ -5,11 +5,16 @@ import se.yrgo.domain.Game;
 import java.util.List;
 
 public interface GameDao {
-    public List<Game> listAllGames();
-    public Game findGameById(int id);
-    public Game findGameByName(String name);
-    public void createGame(Game newGame);
-    public void deleteGame(int id);
-    public void updateGame(Game newGame);
+    List<Game> getAllGames();
+
+    Game getGameById(int gameId);
+
+    Game getGameByName(String gameName);
+
+    void createGame(Game newGame);
+
+    void deleteGame(Game gameToDelete);
+
+    void updateGame(Game gameToUpdate);
 
 }

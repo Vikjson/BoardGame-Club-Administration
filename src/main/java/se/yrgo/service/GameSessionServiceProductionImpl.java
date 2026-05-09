@@ -65,7 +65,7 @@ public class GameSessionServiceProductionImpl implements GameSessionService {
         }
 
         if (gameId != null) {
-            Game game = gameDao.findGameById(gameId);
+            Game game = gameDao.getGameById(gameId);
             session.setGame(game);
         }
 
