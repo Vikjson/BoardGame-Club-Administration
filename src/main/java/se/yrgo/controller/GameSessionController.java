@@ -93,6 +93,7 @@ public class GameSessionController {
         gameSessionService.updateGameSession(id, gameId, localDate);
     }
 
+    //GameSessions can only be deleted if the session have no participants
     @DeleteMapping("/{id}")
     public void deleteGameSession(@PathVariable int id) {
         if (id < 1) {
