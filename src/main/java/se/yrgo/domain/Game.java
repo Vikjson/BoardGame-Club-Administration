@@ -38,6 +38,7 @@ public class Game {
         return gameName;
     }
 
+    public int getGameId(){return gameId;}
 //    @OneToMany(mappedBy = "game")
 //    private List<GameSession> sessions;
 }
