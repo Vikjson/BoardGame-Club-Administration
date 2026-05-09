@@ -9,6 +9,7 @@ import se.yrgo.data.GameDao;
 import se.yrgo.data.GameSessionDao;
 import se.yrgo.domain.Game;
 import se.yrgo.domain.GameSession;
+import se.yrgo.error.GameSessionDeleteException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -52,7 +53,13 @@ public class GameSessionServiceProductionImpl implements GameSessionService {
 
 
     @Override
-    public void createGameSession(GameSession session) {
+    public void createGameSession(int gameId, LocalDate date) {
+        Game game = gameDao.findGameById(gameId);
+        GameSession session = new GameSession();
+
+        session.setGame(game);
+        session.setDate(date);
+
         gameSessionDao.create(session);
     }
 
@@ -76,8 +83,14 @@ public class GameSessionServiceProductionImpl implements GameSessionService {
     public void deleteGameSession(int id) {
         try {
             gameSessionDao.delete(id);
+
         } catch (NoResultException e) {
             throw new RuntimeException("The game session with id " + id + " could not be deleted because it does not exist.");
+        } catch (Exception e) {
+
+            throw new GameSessionDeleteException(
+                    "Cannot delete game session because it has participants connected to it."
+            );
         }
     }
 }
