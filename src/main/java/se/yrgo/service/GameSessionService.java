@@ -15,7 +15,7 @@ public interface GameSessionService {
 
     List<GameSession> getByDate(LocalDate date);
 
-    void createGameSession(GameSession session);
+    void createGameSession(int gameId, LocalDate date);
 
     void updateGameSession(int id, Integer gameId, LocalDate date);
 
