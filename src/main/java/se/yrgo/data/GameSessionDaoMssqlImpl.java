@@ -22,14 +22,14 @@ public class GameSessionDaoMssqlImpl implements GameSessionDao{
 
     @Override
     public GameSession getById(int id) {
-        return em.createQuery( "SELECT gameSession FROM GameSession AS gameSession WHERE gameSession.id = :id", GameSession.class)
+        return em.createQuery( "SELECT gameSession FROM GameSession AS gameSession WHERE gameSession.sessionId = :id", GameSession.class)
         .setParameter("id", id)
         .getSingleResult();
     }
 
     @Override
     public List<GameSession> getByGameId(int gameId) {
-        return em.createQuery("SELECT gameSession FROM GameSession AS gameSession WHERE gameSession.game.id = :gameId", GameSession.class)
+        return em.createQuery("SELECT gameSession FROM GameSession AS gameSession WHERE gameSession.game.gameId = :gameId", GameSession.class)
         .setParameter("gameId", gameId)
         .getResultList();
     }
