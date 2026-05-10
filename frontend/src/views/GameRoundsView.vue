@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import {ref, onMounted} from 'vue'
 import GameSessionService from '../service/GameSessionService.js'
 
 const gameSessions = ref([])
@@ -56,7 +56,7 @@ function openEditForm(session) {
   formSession.value = {
     game: session.game,
     date: session.date,
-    participants: session.participants.map(player => ({ ...player }))
+    participants: session.participants.map(player => ({...player}))
   }
 
   showForm.value = true
@@ -74,7 +74,6 @@ function addParticipant() {
 function removeParticipant(index) {
   formSession.value.participants.splice(index, 1)
 }
-
 
 
 function closeForm() {
@@ -141,11 +140,27 @@ function closeForm() {
 
     <article
         v-for="session in gameSessions"
-        :key="session.sessionId"
+        :key="session.gameSessionId"
         class="session-card"
     >
-      <h3>{{ session.game }}</h3>
-      <p>Datum: {{ session.date }}</p>
+      <div class="session-header">
+        <div>
+          <h3>{{ session.game.gameName }}</h3>
+          <p>Datum: {{ session.date }}</p>
+        </div>
+
+        <div class="session-actions">
+          <button @click="openEditForm(session)">Redigera</button>
+          <button @click="deleteSession(session.gameSessionId)">Ta bort</button>
+        </div>
+      </div>
+
+      <div class="game-info">
+        <span>Kategori: {{ session.game.category }}</span>
+        <span>Spelare: {{ session.game.totalPlayers }}</span>
+        <span>Ålder: {{ session.game.recommendedAge }}+</span>
+        <span>Speltid: {{ session.game.averagePlayTime }} min</span>
+      </div>
 
       <table>
         <thead>
@@ -157,24 +172,13 @@ function closeForm() {
         </thead>
 
         <tbody>
-        <tr
-            v-for="player in session.participants"
-            :key="player.memberId"
-        >
-          <td>{{ player.name }}</td>
+        <tr v-for="player in session.participants" :key="player.id">
+          <td>{{ player.member?.name || player.name || player.memberId }}</td>
           <td>{{ player.score }}</td>
           <td>{{ player.winner ? 'Ja' : 'Nej' }}</td>
         </tr>
         </tbody>
       </table>
-
-      <button @click="openEditForm(session)">
-        Redigera
-      </button>
-
-      <button @click="deleteSession(session.sessionId)">
-        Ta bort
-      </button>
     </article>
   </section>
 </template>
@@ -184,8 +188,7 @@ function closeForm() {
   padding: 2rem;
 }
 
-.session-form,
-.session-card {
+.session-form{
   margin-top: 1.5rem;
   padding: 1rem;
   border: 1px solid #ddd;
@@ -214,17 +217,58 @@ input {
 button {
   margin-right: 0.5rem;
 }
+.session-card {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+}
+
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.session-header h3 {
+  margin: 0;
+}
+
+.session-header p {
+  margin: 0.25rem 0 0;
+}
+
+.game-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.game-info span {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+.session-actions {
+  display: flex;
+  gap: 0.5rem;
+}
 
 table {
   width: 100%;
-  margin: 1rem 0;
+  margin-top: 1rem;
   border-collapse: collapse;
 }
 
 th,
 td {
   border: 1px solid #ddd;
-  padding: 0.5rem;
+  padding: 0.75rem;
   text-align: center;
 }
 </style>
