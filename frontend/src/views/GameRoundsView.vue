@@ -1,12 +1,24 @@
 <script setup>
 import {ref, onMounted} from 'vue'
 import GameSessionService from '../service/GameSessionService.js'
+import MemberService from '../service/MemberService.js'
+import GameService from '../service/GameService.js'
+import SessionParticipantService from '../service/SessionParticipantService.js'
+
+const memberService = new MemberService()
+const gameService = new GameService()
+const sessionParticipantService = new SessionParticipantService()
+
+const members = ref([])
+const games = ref([])
 
 const gameSessions = ref([])
 const gameSessionService = new GameSessionService()
 
 onMounted(async () => {
   gameSessions.value = await gameSessionService.getAll()
+  members.value = await memberService.getAll()
+  games.value = await gameService.getAll()
 })
 
 async function deleteSession(sessionId) {
@@ -35,18 +47,22 @@ const showForm = ref(false)
 const editingId = ref(null)
 
 const formSession = ref({
-  game: '',
+  sessionId: null,
+  gameId: '',
   date: '',
   participants: []
 })
 
 function openAddForm() {
   editingId.value = null
+
   formSession.value = {
-    game: '',
+    sessionId: null,
+    gameId: '',
     date: '',
     participants: []
   }
+
   showForm.value = true
 }
 
@@ -54,22 +70,30 @@ function openEditForm(session) {
   editingId.value = session.sessionId
 
   formSession.value = {
-    game: session.game,
+    sessionId: session.sessionId,
+    gameId: session.game.gameId,
     date: session.date,
-    participants: session.participants.map(player => ({...player}))
+    participants: session.participants.map(player => ({
+      id: player.id,
+      memberId: player.member.memberId,
+      score: player.score,
+      winner: player.winner
+    }))
   }
 
   showForm.value = true
 }
 
 
+
 function addParticipant() {
   formSession.value.participants.push({
-    memberId: Date.now(),
-    name: '',
+    id: null,
+    memberId: '',
     score: 0,
     winner: false
   })
+}
 
 
 
@@ -82,13 +106,10 @@ function removeParticipant(index) {
 function closeForm() {
   showForm.value = false
   editingId.value = null
-}
+
 }
 
-onMounted(async () => {
-  gameSessions.value = await gameSessionService.getAll()
-  console.log(gameSessions.value)
-})
+
 
 </script>
 
@@ -105,7 +126,16 @@ onMounted(async () => {
 
       <label>
         Spel
-        <input v-model="formSession.game" type="text" required>
+        <select v-model.number="formSession.gameId" required>
+          <option disabled value="">Välj spel</option>
+          <option
+              v-for="game in games"
+              :key="game.gameId"
+              :value="game.gameId"
+          >
+            {{ game.gameName }}
+          </option>
+        </select>
       </label>
 
       <label>
@@ -117,13 +147,29 @@ onMounted(async () => {
 
       <div
           v-for="(player, index) in formSession.participants"
-          :key="player.memberId"
+          :key="index"
           class="participant-row"
       >
-        <input v-model="player.name" type="text" placeholder="Namn" required>
-        <input v-model.number="player.score" type="number" placeholder="Poäng">
+        <label>
+          Medlem
+          <select v-model.number="player.memberId" required>
+            <option disabled value="">Välj medlem</option>
+            <option
+                v-for="member in members"
+                :key="member.memberId"
+                :value="member.memberId"
+            >
+              {{ member.name }}
+            </option>
+          </select>
+        </label>
 
         <label>
+          Poäng
+          <input v-model.number="player.score" type="number">
+        </label>
+
+        <label class="checkbox-label">
           <input v-model="player.winner" type="checkbox">
           Vinnare
         </label>
@@ -136,7 +182,6 @@ onMounted(async () => {
       <button type="button" @click="addParticipant">
         + Lägg till deltagare
       </button>
-
       <div class="form-actions">
         <button type="submit">
           Spara

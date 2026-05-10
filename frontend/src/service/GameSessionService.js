@@ -33,6 +33,17 @@ class GameSessionService {
 
         return Array.from(sessionsMap.values())
     }
+
+    async create(gameId, date) {
+        return await this.apiService.postData('/gamesessions', {
+            gameId,
+            date
+        })
+    }
+
+    async delete(sessionId) {
+        return await this.apiService.deleteData(`/gamesessions/${sessionId}`)
+    }
 }
 
 export default GameSessionService

@@ -1,35 +1,28 @@
 import ApiService from './ApiService.js'
-import SessionParticipantService from './SessionParticipantService.js'
+import { SessionParticipant } from '../entities/SessionParticipant.js'
 
-class GameSessionService {
+class SessionParticipantService {
     constructor() {
         this.apiService = new ApiService()
-        this.sessionParticipantService = new SessionParticipantService()
     }
 
     async getAll() {
-        const sessions = await this.apiService.getData('/gamesessions')
-
-        for (const session of sessions) {
-            const sessionId = session.gameSessionId ?? session.id
-
-            session.participants =
-                await this.sessionParticipantService.getBySessionId(sessionId)
-        }
-
-        return sessions
+        const json = await this.apiService.getData('/sessionparticipants')
+        return json.map(p => new SessionParticipant(p))
     }
 
-    async create(gameId, date) {
-        return await this.apiService.postData('/gamesessions', {
-            gameId,
-            date
-        })
+    async getBySessionId(sessionId) {
+        const json = await this.apiService.getData(`/sessionparticipants/session/${sessionId}`)
+        return json.map(p => new SessionParticipant(p))
     }
 
-    async delete(sessionId) {
-        return await this.apiService.deleteData(`/gamesessions/${sessionId}`)
+    async create(participant) {
+        return await this.apiService.postData('/sessionparticipants', participant)
+    }
+
+    async delete(id) {
+        return await this.apiService.deleteData(`/sessionparticipants/${id}`)
     }
 }
 
-export default GameSessionService
+export default SessionParticipantService
