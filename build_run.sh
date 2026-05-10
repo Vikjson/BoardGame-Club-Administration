@@ -16,3 +16,9 @@ fi
 
 docker cp target/"$WAR_FILE" "$TOMCAT_CONTAINER_NAME":/usr/local/tomcat/webapps/
 docker restart "$TOMCAT_CONTAINER_NAME"
+#
+#if ! curl http://localhost:5173; then
+#  echo "Running nmp run dev..."
+#  npm run dev
+#fi
+#echo "npm now running."

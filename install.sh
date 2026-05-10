@@ -19,4 +19,7 @@ fi
 
 docker run -d -p 32772:8080 --name "$TOMCAT_CONTAINER_NAME" tomcat
 
+cd frontend/
+npm install
+
 #TODO: Init DB tables etc?
