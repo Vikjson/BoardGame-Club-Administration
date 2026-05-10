@@ -21,12 +21,15 @@ onMounted(async () => {
   games.value = await gameService.getAll()
 })
 
-async function deleteSession(sessionId) {
+async function deleteSession(session) {
+  for (const participant of session.participants) {
+    await sessionParticipantService.delete(participant.id)
+  }
 
-  await gameSessionService.delete(sessionId)
+  await gameSessionService.delete(session.sessionId)
 
   gameSessions.value = gameSessions.value.filter(
-      session => session.gameSessionId !== sessionId
+      s => s.sessionId !== session.sessionId
   )
 }
 
@@ -223,7 +226,7 @@ function closeForm() {
 
         <div class="session-actions">
           <button @click="openEditForm(session)">Redigera</button>
-          <button @click="deleteSession(session.gameSessionId)">Ta bort</button>
+          <button @click="deleteSession(session)">Ta bort</button>
         </div>
       </div>
 
@@ -237,7 +240,7 @@ function closeForm() {
       <table>
         <thead>
         <tr>
-          <th>Medlem</th>
+          <th>Spelare</th>
           <th>Poäng</th>
           <th>Vinnare</th>
         </tr>
