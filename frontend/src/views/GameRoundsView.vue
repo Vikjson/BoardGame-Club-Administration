@@ -141,7 +141,7 @@ function closeForm() {
       Lägg till spelomgång
     </button>
 
-    <form v-if="showForm" class="session-form" @submit.prevent="saveSession">
+    <form v-if="showForm && editingId === null" class="session-form" @submit.prevent="saveSession">
       <h3>{{ editingId === null ? 'Ny spelomgång' : 'Redigera spelomgång' }}</h3>
 
       <label>
@@ -216,8 +216,81 @@ function closeForm() {
     <article
         v-for="session in gameSessions"
         :key="session.gameSessionId"
-        class="session-card"
-    >
+        class="session-card">
+
+      <form v-if="showForm && editingId === session.sessionId" class="session-form" @submit.prevent="saveSession">
+        <h3>{{ editingId === null ? 'Ny spelomgång' : 'Redigera spelomgång' }}</h3>
+
+        <label>
+          Spel
+          <select v-model.number="formSession.gameId" required>
+            <option disabled value="">Välj spel</option>
+            <option
+                v-for="game in games"
+                :key="game.gameId"
+                :value="game.gameId"
+            >
+              {{ game.gameName }}
+            </option>
+          </select>
+        </label>
+
+        <label>
+          Datum
+          <input v-model="formSession.date" type="date" required>
+        </label>
+
+        <h4>Deltagare</h4>
+
+        <div
+            v-for="(player, index) in formSession.participants"
+            :key="index"
+            class="participant-row"
+        >
+          <label>
+            Medlem
+            <select v-model.number="player.memberId" required>
+              <option disabled value="">Välj medlem</option>
+              <option
+                  v-for="member in members"
+                  :key="member.memberId"
+                  :value="member.memberId"
+              >
+                {{ member.name }}
+              </option>
+            </select>
+          </label>
+
+          <label>
+            Poäng
+            <input v-model.number="player.score" type="number">
+          </label>
+
+          <label class="checkbox-label">
+            <input v-model="player.winner" type="checkbox">
+            Vinnare
+          </label>
+
+          <button type="button" @click="removeParticipant(index)">
+            Ta bort deltagare
+          </button>
+        </div>
+
+        <button type="button" @click="addParticipant">
+          + Lägg till deltagare
+        </button>
+        <div class="form-actions">
+          <button type="submit">
+            Spara
+          </button>
+
+          <button type="button" @click="closeForm">
+            Avbryt
+          </button>
+        </div>
+      </form>
+
+
       <div class="session-header">
         <div>
           <h3>{{ session.game.gameName }}</h3>
