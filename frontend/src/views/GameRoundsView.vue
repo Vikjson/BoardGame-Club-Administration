@@ -31,14 +31,28 @@ async function deleteSession(sessionId) {
 }
 
 async function saveSession() {
-
-  await gameSessionService.create(
+  const createdSession = await gameSessionService.create(
       formSession.value.gameId,
       formSession.value.date
   )
 
-  gameSessions.value = await gameSessionService.getAll()
+  console.log(createdSession)
+  console.log(formSession.value.participants)
 
+  for (const player of formSession.value.participants) {
+    await sessionParticipantService.create({
+      member: {
+        memberId: player.memberId
+      },
+      gameSession: {
+        sessionId: createdSession.sessionId
+      },
+      score: player.score,
+      winner: player.winner
+    })
+  }
+
+  gameSessions.value = await gameSessionService.getAll()
   closeForm()
 }
 
@@ -85,7 +99,6 @@ function openEditForm(session) {
 }
 
 
-
 function addParticipant() {
   formSession.value.participants.push({
     id: null,
@@ -96,10 +109,15 @@ function addParticipant() {
 }
 
 
+async function removeParticipant(index) {
+  const participant = formSession.value.participants[index]
 
+  if (participant.id !== null && participant.id !== undefined) {
+    await sessionParticipantService.delete(participant.id)
+  }
 
-function removeParticipant(index) {
   formSession.value.participants.splice(index, 1)
+  gameSessions.value = await gameSessionService.getAll()
 }
 
 
@@ -108,7 +126,6 @@ function closeForm() {
   editingId.value = null
 
 }
-
 
 
 </script>
