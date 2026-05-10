@@ -5,7 +5,7 @@
 export class Member {
     constructor(initObj) {
         this.memberId = initObj.memberId;
-        this.name = initObj.name;
+        this.name = initObj.firstName + ' ' + initObj.lastName;
         this.email = initObj.email;
         this.membershipFeePaid = initObj.membershipFeePaid;
         this.totalWins = initObj.totalWins;

@@ -13,6 +13,13 @@ class ApiService {
 
         return await response.json();
     }
+
+    async postData(endpoint, entity) {
+        const resp = await fetch(this.apiUrl + endpoint, {
+            method: "POST",
+            body: JSON.stringify(entity),
+        })
+    }
 }
 
 export default ApiService;

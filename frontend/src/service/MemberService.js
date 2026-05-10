@@ -6,7 +6,7 @@ class MemberService {
         this.apiService = new ApiService();
     }
 
-    async getAll(){
+    async getAll() {
         try {
             const members = [];
             const json = await this.apiService.getData('/members');
@@ -15,11 +15,20 @@ class MemberService {
                 members.push(new Member(member));
             }
             return members;
-        }
-        catch (e) {
+        } catch (e) {
             console.error('Error fetching all members.' + e.message);
             throw e;
         }
     }
+
+    async registerNewMember(member) {
+        try {
+            await this.apiService.postData('/members', member);
+        } catch (e) {
+            console.error('Failed to register member ' + member.name + '.');
+            throw e;
+        }
+    }
 }
+
 export default MemberService;

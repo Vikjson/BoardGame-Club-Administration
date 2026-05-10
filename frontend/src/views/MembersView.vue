@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed } from 'vue'
+import {ref, computed} from 'vue'
 import MemberService from "../service/MemberService.js";
+import {Member} from "../entities/Member.js";
 
 // const members = ref([
 //   { id: 1, firstName: 'Anna', lastName: 'Andersson', email: 'anna@mail.com', paid: true },
@@ -15,11 +16,12 @@ const editingId = ref(null)
 const showOnlyUnpaid = ref(false)
 
 const formMember = ref({
-  id: '',
-  name: '',
+  memberId: '',
+  firstName: '',
+  lastName: '',
   totalWins: '',
   email: '',
-  paid: false,
+  membershipFeePaid: false,
   age: '',
 })
 
@@ -31,7 +33,7 @@ const visibleMembers = computed(() => {
   return members.value.filter(member => !member.membershipFeePaid)
 })
 
-async function getMembers(){
+async function getMembers() {
   const memberService = new MemberService();
   members.value = await memberService.getAll();
 }
@@ -39,33 +41,41 @@ async function getMembers(){
 function openAddForm() {
   editingId.value = null
   formMember.value = {
+    memberId: '',
     firstName: '',
     lastName: '',
+    totalWins: '',
     email: '',
-    paid: false
+    membershipFeePaid: false,
+    age: '',
   }
   showForm.value = true
 }
 
 function openEditForm(member) {
   editingId.value = member.id
-  formMember.value = { ...member }
+  formMember.value = {...member}
   showForm.value = true
 }
 
-function saveMember() {
-  if (editingId.value === null) {
-    members.value.push({
-      id: Date.now(),
-      ...formMember.value
-    })
-  } else {
-    const index = members.value.findIndex(member => member.id === editingId.value)
+async function saveMember() {
+  // if (editingId.value === null) {
+  //   members.value.push({
+  //     id: Date.now(),
+  //     ...formMember.value
+  //   })
+  // } else {
+  //   const index = members.value.findIndex(member => member.id === editingId.value)
+  //
+  //   members.value[index] = {
+  //     id: editingId.value,
+  //     ...formMember.value
+  //   }
 
-    members.value[index] = {
-      id: editingId.value,
-      ...formMember.value
-    }
+  if (editingId.value === null) {
+    const service = new MemberService();
+    const memberToAdd = new Member(formMember.value)
+    await service.registerNewMember(memberToAdd);
   }
 
   closeForm()
@@ -110,8 +120,13 @@ function closeForm() {
         <input v-model="formMember.email" type="email" required>
       </label>
 
+      <label>
+        Ålder
+        <input v-model="formMember.age" type="number" required>
+      </label>
+
       <label class="checkbox-label">
-        <input v-model="formMember.paid" type="checkbox">
+        <input v-model="formMember.membershipFeePaid" type="checkbox">
         Har betalat medlemskapet
       </label>
 
