@@ -6,7 +6,7 @@ class MemberService {
         this.apiService = new ApiService();
     }
 
-    async getAll() {
+    async getAll(){
         try {
             const members = [];
             const json = await this.apiService.getData('/members');
