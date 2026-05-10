@@ -75,31 +75,7 @@ function removeParticipant(index) {
   formSession.value.participants.splice(index, 1)
 }
 
-function saveSession() {
-  if (editingId.value === null) {
-    gameSessions.value.push({
-      sessionId: Date.now(),
-      ...formSession.value
-    })
-  } else {
-    const index = gameSessions.value.findIndex(
-        session => session.sessionId === editingId.value
-    )
 
-    gameSessions.value[index] = {
-      sessionId: editingId.value,
-      ...formSession.value
-    }
-  }
-
-  closeForm()
-}
-
-function deleteSession(sessionId) {
-  gameSessions.value = gameSessions.value.filter(
-      session => session.sessionId !== sessionId
-  )
-}
 
 function closeForm() {
   showForm.value = false

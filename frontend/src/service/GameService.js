@@ -12,11 +12,26 @@ class GameService {
     }
 
     async create(game) {
-        return await this.apiService.postData('/games', game)
+        await this.apiService.postData('/games', game)
+    }
+
+    async update(gameId, game) {
+        const params = new URLSearchParams()
+
+        if (game.gameName) params.append('gameName', game.gameName)
+        if (game.purchaseDate) params.append('purchaseDate', game.purchaseDate)
+        if (game.totalPlayers !== null && game.totalPlayers !== undefined) params.append('totalPlayers', game.totalPlayers)
+        if (game.category) params.append('category', game.category)
+        if (game.recommendedAge !== null && game.recommendedAge !== undefined) params.append('recommendedAge', game.recommendedAge)
+        if (game.averagePlayTime !== null && game.averagePlayTime !== undefined) params.append('averagePlayTime', game.averagePlayTime)
+        if (game.description) params.append('description', game.description)
+        if (game.memberComment) params.append('memberComment', game.memberComment)
+
+        await this.apiService.putData(`/games/${gameId}?${params.toString()}`)
     }
 
     async delete(gameId) {
-        return await this.apiService.deleteData(`/games/${gameId}`)
+        await this.apiService.deleteData(`/games/${gameId}`)
     }
 }
 
