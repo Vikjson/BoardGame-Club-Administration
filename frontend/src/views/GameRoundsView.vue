@@ -1,26 +1,35 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import GameSessionService from '../service/GameSessionService.js'
 
-const gameSessions = ref([
-  {
-    sessionId: 1,
-    game: 'Catan',
-    date: '2026-05-02',
-    participants: [
-      { memberId: 1, name: 'Anna Andersson', score: 10, winner: true },
-      { memberId: 2, name: 'Bo Bengtsson', score: 7, winner: false }
-    ]
-  },
-  {
-    sessionId: 2,
-    game: 'Ticket to Ride',
-    date: '2026-05-02',
-    participants: [
-      { memberId: 1, name: 'Anna Andersson', score: 80, winner: false },
-      { memberId: 3, name: 'Lisa Larsson', score: 110, winner: true }
-    ]
-  }
-])
+const gameSessions = ref([])
+const gameSessionService = new GameSessionService()
+
+onMounted(async () => {
+  gameSessions.value = await gameSessionService.getAll()
+})
+
+async function deleteSession(sessionId) {
+
+  await gameSessionService.delete(sessionId)
+
+  gameSessions.value = gameSessions.value.filter(
+      session => session.gameSessionId !== sessionId
+  )
+}
+
+async function saveSession() {
+
+  await gameSessionService.create(
+      formSession.value.gameId,
+      formSession.value.date
+  )
+
+  gameSessions.value = await gameSessionService.getAll()
+
+  closeForm()
+}
+
 
 const showForm = ref(false)
 const editingId = ref(null)

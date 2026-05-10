@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/sessionparticipants")
+@CrossOrigin(origins = "http://localhost:5173")
 public class SessionParticipantController {
     private SessionParticipantService sessionParticipantService;
 

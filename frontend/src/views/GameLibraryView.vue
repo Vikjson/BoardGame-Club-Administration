@@ -1,22 +1,37 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import GameService from '../service/GameService.js'
 
-const games = ref([
-  {
-    id: 1,
-    name: 'Catan',
-    purchaseDate: '2024-01-01',
-    players: '3-4',
-    category: 'Strategi',
-    age: 10,
-    playTime: 90,
-    description: 'Bygg och handla resurser',
-    clubComment: 'Populärt!'
+const games = ref([])
+const gameService = new GameService()
+
+onMounted(async () => {
+  games.value = await gameService.getAll()
+})
+
+async function saveGame() {
+
+  if (editingId.value === null) {
+
+    await gameService.create(formGame.value)
+
+    games.value = await gameService.getAll()
   }
-])
+
+  closeForm()
+}
 
 const showForm = ref(false)
 const editingId = ref(null)
+
+async function deleteGame(gameId) {
+
+  await gameService.delete(gameId)
+
+  games.value = games.value.filter(
+      game => game.gameId !== gameId
+  )
+}
 
 const formGame = ref({
   name: '',
