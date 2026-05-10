@@ -62,6 +62,7 @@ function openEditForm(session) {
   showForm.value = true
 }
 
+
 function addParticipant() {
   formSession.value.participants.push({
     memberId: Date.now(),
@@ -69,7 +70,9 @@ function addParticipant() {
     score: 0,
     winner: false
   })
-}
+
+
+
 
 function removeParticipant(index) {
   formSession.value.participants.splice(index, 1)
@@ -80,6 +83,13 @@ function closeForm() {
   showForm.value = false
   editingId.value = null
 }
+}
+
+onMounted(async () => {
+  gameSessions.value = await gameSessionService.getAll()
+  console.log(gameSessions.value)
+})
+
 </script>
 
 <template>
@@ -173,9 +183,9 @@ function closeForm() {
 
         <tbody>
         <tr v-for="player in session.participants" :key="player.id">
-          <td>{{ player.member?.name || player.name || player.memberId }}</td>
+          <td>{{ player.member?.name }}</td>
           <td>{{ player.score }}</td>
-          <td>{{ player.winner ? 'Ja' : 'Nej' }}</td>
+          <td>{{ player.winner || player.isWinner ? 'Ja' : 'Nej' }}</td>
         </tr>
         </tbody>
       </table>
@@ -188,7 +198,7 @@ function closeForm() {
   padding: 2rem;
 }
 
-.session-form{
+.session-form {
   margin-top: 1.5rem;
   padding: 1rem;
   border: 1px solid #ddd;
@@ -217,6 +227,7 @@ input {
 button {
   margin-right: 0.5rem;
 }
+
 .session-card {
   margin-top: 1.5rem;
   padding: 1.5rem;

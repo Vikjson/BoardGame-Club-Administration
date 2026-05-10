@@ -1,5 +1,4 @@
 import ApiService from './ApiService.js'
-import { GameSession } from '../entities/GameSession.js'
 
 class GameSessionService {
     constructor() {
@@ -7,33 +6,32 @@ class GameSessionService {
     }
 
     async getAll() {
-        const json = await this.apiService.getData('/gamesessions')
-        return json.map(session => new GameSession(session))
-    }
+        const participants = await this.apiService.getData('/sessionparticipants')
 
-    async create(gameId, date) {
-        return await this.apiService.postData('/gamesessions', {
-            gameId,
-            date
-        })
-    }
+        const sessionsMap = new Map()
 
-    async update(sessionId, gameId, date) {
-        const params = new URLSearchParams()
+        for (const participant of participants) {
+            const session = participant.gameSession
+            const sessionId = session.sessionId
 
-        if (gameId !== null && gameId !== undefined) {
-            params.append('gameId', gameId)
+            if (!sessionsMap.has(sessionId)) {
+                sessionsMap.set(sessionId, {
+                    sessionId: session.sessionId,
+                    date: session.date,
+                    game: session.game,
+                    participants: []
+                })
+            }
+
+            sessionsMap.get(sessionId).participants.push({
+                id: participant.id,
+                member: participant.member,
+                score: participant.score,
+                winner: participant.winner
+            })
         }
 
-        if (date) {
-            params.append('date', date)
-        }
-
-        return await this.apiService.putData(`/gamesessions/${sessionId}?${params}`)
-    }
-
-    async delete(sessionId) {
-        return await this.apiService.deleteData(`/gamesessions/${sessionId}`)
+        return Array.from(sessionsMap.values())
     }
 }
 
