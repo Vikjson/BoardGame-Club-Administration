@@ -53,14 +53,8 @@ public class GameSessionServiceProductionImpl implements GameSessionService {
 
 
     @Override
-    public void createGameSession(int gameId, LocalDate date) {
-        Game game = gameDao.getGameById(gameId);
-        GameSession session = new GameSession();
-
-        session.setGame(game);
-        session.setDate(date);
-
-        gameSessionDao.create(session);
+    public GameSession createGameSession(int gameId, LocalDate date) {
+        return gameSessionDao.createGameSession(gameId, date);
     }
 
     @Override

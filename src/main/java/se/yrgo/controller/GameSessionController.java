@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/gamesessions")
@@ -65,12 +64,12 @@ public class GameSessionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGameSession(@RequestBody Map<String, Object> body) {
+    public GameSession createGameSession(@RequestBody Map<String, Object> body) {
 
         int gameId = (int) body.get("gameId");
         LocalDate date = LocalDate.parse((String) body.get("date"));
 
-        gameSessionService.createGameSession(gameId, date);
+        return gameSessionService.createGameSession(gameId, date);
     }
 
     @PutMapping("/{id}")
