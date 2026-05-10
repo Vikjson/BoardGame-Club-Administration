@@ -11,9 +11,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/gamesessions")
+@CrossOrigin(origins = "http://localhost:5173")
 public class GameSessionController {
 
     private GameSessionService gameSessionService;
@@ -58,6 +60,7 @@ public class GameSessionController {
             );
         }
     }
+
 
 
     @PostMapping

@@ -1,32 +1,38 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import GameService from '../service/GameService.js'
 
-const games = ref([
-  {
-    id: 1,
-    name: 'Catan',
-    purchaseDate: '2024-01-01',
-    players: '3-4',
-    category: 'Strategi',
-    age: 10,
-    playTime: 90,
-    description: 'Bygg och handla resurser',
-    clubComment: 'Populärt!'
+const games = ref([])
+const gameService = new GameService()
+
+onMounted(async () => {
+  games.value = await gameService.getAll()
+})
+
+async function saveGame() {
+  if (editingId.value === null) {
+    await gameService.create(formGame.value)
+  } else {
+    await gameService.update(editingId.value, formGame.value)
   }
-])
+
+  games.value = await gameService.getAll()
+  closeForm()
+}
 
 const showForm = ref(false)
 const editingId = ref(null)
 
+
 const formGame = ref({
-  name: '',
+  gameName: '',
   purchaseDate: '',
-  players: '',
+  totalPlayers: 0,
   category: '',
-  age: 0,
-  playTime: 0,
+  recommendedAge: 0,
+  averagePlayTime: 0,
   description: '',
-  clubComment: ''
+  memberComment: ''
 })
 
 function openAddForm() {
@@ -45,31 +51,15 @@ function openAddForm() {
 }
 
 function openEditForm(game) {
-  editingId.value = game.id
+  editingId.value = game.gameId
   formGame.value = { ...game }
   showForm.value = true
 }
 
-function saveGame() {
-  if (editingId.value === null) {
-    games.value.push({
-      id: Date.now(),
-      ...formGame.value
-    })
-  } else {
-    const index = games.value.findIndex(g => g.id === editingId.value)
 
-    games.value[index] = {
-      id: editingId.value,
-      ...formGame.value
-    }
-  }
-
-  closeForm()
-}
-
-function deleteGame(id) {
-  games.value = games.value.filter(g => g.id !== id)
+async function deleteGame(gameId) {
+  await gameService.delete(gameId)
+  games.value = games.value.filter(game => game.gameId !== gameId)
 }
 
 function closeForm() {
@@ -133,11 +123,11 @@ function closeForm() {
 
       <tbody>
       <tr v-for="game in games" :key="game.id">
-        <td>{{ game.name }}</td>
+        <td>{{ game.gameName }}</td>
         <td>{{ game.category }}</td>
-        <td>{{ game.players }}</td>
-        <td>{{ game.age }}+</td>
-        <td>{{ game.playTime }} min</td>
+        <td>{{ game.totalPlayers }}</td>
+        <td>{{ game.recommendedAge }}+</td>
+        <td>{{ game.averagePlayTime }} min</td>
         <td>
           <button @click="openEditForm(game)">Redigera</button>
           <button @click="deleteGame(game.id)">Ta bort</button>
