@@ -54,7 +54,7 @@ public class GameSessionServiceProductionImpl implements GameSessionService {
 
     @Override
     public void createGameSession(int gameId, LocalDate date) {
-        Game game = gameDao.findGameById(gameId);
+        Game game = gameDao.getGameById(gameId);
         GameSession session = new GameSession();
 
         session.setGame(game);
@@ -72,7 +72,7 @@ public class GameSessionServiceProductionImpl implements GameSessionService {
         }
 
         if (gameId != null) {
-            Game game = gameDao.findGameById(gameId);
+            Game game = gameDao.getGameById(gameId);
             session.setGame(game);
         }
 

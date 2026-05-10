@@ -14,23 +14,23 @@ public class GameDaoMssqlImpl implements GameDao {
 
 
     @Override
-    public List<Game> listAllGames() {
+    public List<Game> getAllGames() {
         return em.createQuery("SELECT game FROM Game AS game", Game.class)
                 .getResultList();
     }
 
     @Override
-    public Game findGameById(int id) {
+    public Game getGameById(int gameId) {
         return em.createQuery("SELECT game FROM Game AS game WHERE game.gameId = :gameId", Game.class)
-                .setParameter("gameId", id)
+                .setParameter("gameId", gameId)
                 .getSingleResult();
     }
 
     @Override
-    public Game findGameByName(String name) {
+    public Game getGameByName(String gameName) {
         return em.createQuery("SELECT game FROM Game AS game WHERE game.gameName = :gameName", Game.class)
-            .setParameter("gameName", name)    
-            .getSingleResult();
+                .setParameter("gameName", gameName)
+                .getSingleResult();
     }
 
     @Override
@@ -39,12 +39,12 @@ public class GameDaoMssqlImpl implements GameDao {
     }
 
     @Override
-    public void deleteGame(int id) {
-
+    public void deleteGame(Game gameToDelete) {
+        em.remove(gameToDelete);
     }
 
     @Override
-    public void updateGame(Game newGame) {
-
+    public void updateGame(Game gameToUpdate) {
+        em.merge(gameToUpdate);
     }
 }
