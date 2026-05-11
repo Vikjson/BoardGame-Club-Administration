@@ -14,6 +14,7 @@ public class SessionParticipantDaoMssqlImpl implements SessionParticipantDao {
 
     @Override
     public void createSessionParticipant(SessionParticipant sessionParticipant) {
+        em.persist(sessionParticipant);
     }
 
     @Override
@@ -25,12 +26,33 @@ public class SessionParticipantDaoMssqlImpl implements SessionParticipantDao {
 
     @Override
     public void deleteSessionParticipant(SessionParticipant sessionParticipant) {
-
+        SessionParticipant managed = em.merge(sessionParticipant);
+        em.remove(managed);
     }
 
     @Override
     public List<SessionParticipant> getAllSessionParticipants() {
-            return em.createQuery("SELECT sp FROM SessionParticipant AS sp", SessionParticipant.class)
-                    .getResultList();
+        return em.createQuery("SELECT sp FROM SessionParticipant AS sp", SessionParticipant.class)
+                .getResultList();
+    }
+
+    @Override
+    public List<SessionParticipant> getBySessionId(int sessionId) {
+        return em.createQuery(
+                        "SELECT sp FROM SessionParticipant AS sp WHERE sp.session.sessionId = :sessionId",
+                        SessionParticipant.class
+                )
+                .setParameter("sessionId", sessionId)
+                .getResultList();
+    }
+
+    @Override
+    public List<SessionParticipant> getByMemberId(int memberId) {
+        return em.createQuery(
+                        "SELECT sp FROM SessionParticipant AS sp WHERE sp.member.memberId = :memberId",
+                        SessionParticipant.class
+                )
+                .setParameter("memberId", memberId)
+                .getResultList();
     }
 }

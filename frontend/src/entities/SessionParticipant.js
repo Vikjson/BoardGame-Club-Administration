@@ -5,8 +5,8 @@
 export class SessionParticipant {
     constructor(initObj) {
         this.id = initObj.id
-        this.memberId = initObj.memberId
-        this.sessionId = initObj.sessionId
+        this.member = initObj.member
+        this.gameSession = initObj.gameSession
         this.score = initObj.score
         this.winner = initObj.winner
     }

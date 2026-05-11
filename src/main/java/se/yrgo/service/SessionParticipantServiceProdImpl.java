@@ -44,37 +44,23 @@ public class SessionParticipantServiceProdImpl implements SessionParticipantServ
 
     @Override
     public List<SessionParticipant> getBySessionId(int sessionId) {
-        List<SessionParticipant> sessionParticipants = sessionParticipantDao.getAllSessionParticipants();
+        List<SessionParticipant> sessionParticipants = sessionParticipantDao.getBySessionId(sessionId);
 
         if (sessionParticipants.isEmpty()) {
             throw new EntityNotFoundException("No participants are registered in database.");
         }
-
-        List<SessionParticipant> participantsOfSessionId = sessionParticipants.stream().filter(p -> p.getSessionId() == sessionId)
-                .toList();
-
-        if (participantsOfSessionId.isEmpty()) {
-            throw new EntityNotFoundException("Members of session with id " + sessionId + " has not yet been registered.");
-        }
-        return participantsOfSessionId;
+        return sessionParticipants;
     }
 
     @Override
-    public List<SessionParticipant> getByMemberId(int id) {
+    public List<SessionParticipant> getByMemberId(int memberId) {
 
-        List<SessionParticipant> sessionParticipants = sessionParticipantDao.getAllSessionParticipants();
+        List<SessionParticipant> sessionParticipants = sessionParticipantDao.getByMemberId(memberId);
 
         if (sessionParticipants.isEmpty()) {
             throw new EntityNotFoundException("No participants are registered in database.");
         }
-
-        List<SessionParticipant> participantsOfMemberId = sessionParticipants.stream().filter(p -> p.getMemberId() == id)
-                .toList();
-
-        if (participantsOfMemberId.isEmpty()) {
-            throw new EntityNotFoundException("Member of id " + id + " has not yet played in any sessions.");
-        }
-        return participantsOfMemberId;
+        return sessionParticipants;
     }
 
 

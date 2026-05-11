@@ -3,6 +3,7 @@ package se.yrgo.data;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
+import se.yrgo.domain.Game;
 import se.yrgo.domain.GameSession;
 
 import java.time.LocalDate;
@@ -42,8 +43,14 @@ public class GameSessionDaoMssqlImpl implements GameSessionDao{
     }
 
     @Override
-    public void create(GameSession session) {
+    public GameSession createGameSession(int gameId, LocalDate date) {
+        Game game = em.find(Game.class, gameId);
+
+        GameSession session = new GameSession(game, date);
+
         em.persist(session);
+
+        return session;
     }
 
     @Override

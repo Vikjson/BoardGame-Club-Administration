@@ -1,31 +1,35 @@
 package se.yrgo.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class SessionParticipant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int memberId;
-    private int sessionId;
+
+    @ManyToOne
+    @JoinColumn(name = "memberId")
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "sessionId")
+    private GameSession session;
+
     private int score;
     private boolean isWinner;
 
-    public SessionParticipant(int id, int memberId, int sessionId, int score, boolean isWinner) {
+    public SessionParticipant(Member member, GameSession session, int id, int score, boolean isWinner) {
+        this.member = member;
+        this.session = session;
         this.id = id;
-        this.memberId = memberId;
-        this.sessionId = sessionId;
         this.score = score;
         this.isWinner = isWinner;
     }
 
-    public SessionParticipant(int memberId, int sessionId, int score, boolean isWinner) {
-        this.memberId = memberId;
-        this.sessionId = sessionId;
+    public SessionParticipant(Member member, GameSession session, int score, boolean isWinner) {
+        this.member = member;
+        this.session = session;
         this.score = score;
         this.isWinner = isWinner;
     }
@@ -37,19 +41,35 @@ public class SessionParticipant {
         return id;
     }
 
-    public int getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public int getSessionId() {
-        return sessionId;
+     public GameSession getGameSession() {
+        return session;
     }
 
     public int getScore() {
         return score;
     }
-
     public boolean isWinner() {
         return isWinner;
     }
-}
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public void setGameSession(GameSession session) {
+        this.session = session;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setWinner(boolean winner) {
+        isWinner = winner;
+    }
+
+   }

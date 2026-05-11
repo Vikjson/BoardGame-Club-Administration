@@ -14,7 +14,7 @@ public interface GameSessionDao {
 
     List<GameSession> getByDate(LocalDate date);
 
-    void create(GameSession session);
+    GameSession createGameSession(int gameId, LocalDate date);
 
     void update(GameSession session);
 
