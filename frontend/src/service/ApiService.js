@@ -39,7 +39,7 @@ class ApiService {
         return this.request(endpoint, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: JSON.stringify(data)
         })
     }
 
@@ -48,14 +48,6 @@ class ApiService {
             method: 'DELETE'
         })
     }
-
-    // async postData(endpoint, entity) {
-    //     const resp = await fetch(this.apiUrl + endpoint, {
-    //         method: "POST",
-    //         headers: {'Content-Type': 'application/json'},
-    //         body: JSON.stringify(entity),
-    //     })
-    // }
 }
 
 export default ApiService

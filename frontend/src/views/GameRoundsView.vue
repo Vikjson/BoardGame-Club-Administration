@@ -59,6 +59,43 @@ async function saveSession() {
   closeForm()
 }
 
+async function submitSession() {
+  if (editingId.value === null) {
+    await saveSession()
+  } else {
+    await updateSession()
+  }
+}
+
+async function updateSession() {
+  await gameSessionService.update(
+      formSession.value.sessionId,
+      formSession.value.gameId,
+      formSession.value.date
+  )
+
+  for (const player of formSession.value.participants) {
+    const participantData = {
+      member: {
+        memberId: player.memberId
+      },
+      gameSession: {
+        sessionId: formSession.value.sessionId
+      },
+      score: player.score,
+      winner: player.winner
+    }
+
+    if (player.id) {
+      await sessionParticipantService.update(player.id, participantData)
+    } else {
+      await sessionParticipantService.create(participantData)
+    }
+  }
+
+  gameSessions.value = await gameSessionService.getAll()
+  closeForm()
+}
 
 const showForm = ref(false)
 const editingId = ref(null)
@@ -215,10 +252,10 @@ function closeForm() {
 
     <article
         v-for="session in gameSessions"
-        :key="session.gameSessionId"
+        :key="session.sessionId"
         class="session-card">
 
-      <form v-if="showForm && editingId === session.sessionId" class="session-form" @submit.prevent="saveSession">
+      <form v-if="showForm && editingId === session.sessionId" class="session-form" @submit.prevent="submitSession">
         <h3>{{ editingId === null ? 'Ny spelomgång' : 'Redigera spelomgång' }}</h3>
 
         <label>
