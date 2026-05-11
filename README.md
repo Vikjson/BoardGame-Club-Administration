@@ -9,9 +9,13 @@ The application models a web service for a boardgame club, intended for administ
 members, the game collection, statistics for previous game sessions, etc.
 
 It is a fullstack project, wherein we have used Spring MVC through Tomcat providing a REST API as backend, and Vue.js as
-framework for the frontend application.
-The client application sends HTTP requests to the API to perform basic CRUD operations on the data. 
-We have included some mock data to work with. Both the database and mock data is initialized in the installation script.
+framework for the frontend application. For database, we use Microsoft SQL Server, and we have included some mock data to work with. Both the database and mock data is initialized in the installation script.
+
+
+## Workflow
+On user interaction, the client application sends HTTP requests to the API to perform basic CRUD operations on the data. Any request bodies are formatted in JSON, which backend maps to domain entities using Jackson. 
+The request goes to the appropriate controller endpoint based on the @RequestMapping annotation. The controller checks parameters and such with guards, and uses the appropriate service to handle the request. 
+The services handle the business logic and interacts with the data layer through Dao-interfaces.
 
 ## How to run
 
