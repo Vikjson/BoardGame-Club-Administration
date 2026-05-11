@@ -23,6 +23,10 @@ class SessionParticipantService {
     async delete(id) {
         return await this.apiService.deleteData(`/sessionparticipants/${id}`)
     }
+
+    async update(id,sessionParticipant){
+        return await this.apiService.putData(`/sessionparticipants/${id}`, sessionParticipant)
+    }
 }
 
 export default SessionParticipantService

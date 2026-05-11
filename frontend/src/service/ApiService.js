@@ -35,9 +35,11 @@ class ApiService {
         })
     }
 
-    putData(endpoint) {
+    putData(endpoint, data) {
         return this.request(endpoint, {
-            method: 'PUT'
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
         })
     }
 
