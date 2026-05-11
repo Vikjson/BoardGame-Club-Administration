@@ -2,6 +2,7 @@ package se.yrgo.data;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Repository;
 import se.yrgo.domain.SessionParticipant;
 
@@ -9,8 +10,13 @@ import java.util.List;
 
 @Repository
 public class SessionParticipantDaoMssqlImpl implements SessionParticipantDao {
+    private final HttpSession httpSession;
     @PersistenceContext
     private EntityManager em;
+
+    public SessionParticipantDaoMssqlImpl(HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
 
     @Override
     public void createSessionParticipant(SessionParticipant sessionParticipant) {
@@ -28,6 +34,11 @@ public class SessionParticipantDaoMssqlImpl implements SessionParticipantDao {
     public void deleteSessionParticipant(SessionParticipant sessionParticipant) {
         SessionParticipant managed = em.merge(sessionParticipant);
         em.remove(managed);
+    }
+
+    @Override
+    public SessionParticipant updateSessionParticipant(SessionParticipant sessionParticipant) {
+       return em.merge(sessionParticipant);
     }
 
     @Override

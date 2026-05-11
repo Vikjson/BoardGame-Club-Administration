@@ -41,6 +41,12 @@ class GameSessionService {
         })
     }
 
+
+    async update(sessionId, gameId, date) {
+        return await this.apiService.putData(`/gamesessions/${sessionId}?gameId=${gameId}&date=${date}`
+        )
+    }
+
     async delete(sessionId) {
         return await this.apiService.deleteData(`/gamesessions/${sessionId}`)
     }
