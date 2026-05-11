@@ -62,6 +62,20 @@ public class SessionParticipantController {
         sessionParticipantService.createSessionParticipant(newSessionParticipant);
     }
 
+    @PutMapping("/{id}")
+    public SessionParticipant updateSessionParticipant(
+            @PathVariable int id,
+            @RequestBody SessionParticipant sessionParticipant) {
+
+        if (id < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'id' parameter.");
+        }
+        sessionParticipant.setId(id);
+
+        return sessionParticipantService.updateSessionParticipant(sessionParticipant);
+    }
+
+
     @DeleteMapping("/{id}")
     public void deleteSessionParticipant(@PathVariable int id) {
         if (id < 1) {

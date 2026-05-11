@@ -11,6 +11,8 @@ public interface SessionParticipantDao {
 
     void deleteSessionParticipant(SessionParticipant sessionParticipant);
 
+    SessionParticipant updateSessionParticipant(SessionParticipant sessionParticipant);
+
     List<SessionParticipant> getAllSessionParticipants();
 
     List<SessionParticipant> getBySessionId(int sessionId);
