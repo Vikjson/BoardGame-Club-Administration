@@ -14,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/gamesessions")
+@CrossOrigin(origins = "http://localhost:5173")
 public class GameSessionController {
 
     private GameSessionService gameSessionService;
@@ -60,14 +61,15 @@ public class GameSessionController {
     }
 
 
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGameSession(@RequestBody Map<String, Object> body) {
+    public GameSession createGameSession(@RequestBody Map<String, Object> body) {
 
         int gameId = (int) body.get("gameId");
         LocalDate date = LocalDate.parse((String) body.get("date"));
 
-        gameSessionService.createGameSession(gameId, date);
+        return gameSessionService.createGameSession(gameId, date);
     }
 
     @PutMapping("/{id}")

@@ -13,4 +13,8 @@ public interface SessionParticipantDao {
 
     List<SessionParticipant> getAllSessionParticipants();
 
+    List<SessionParticipant> getBySessionId(int sessionId);
+
+    List<SessionParticipant> getByMemberId(int memberId);
+
 }

@@ -1,43 +1,85 @@
 <script setup>
-import { ref } from 'vue'
+import {ref, onMounted} from 'vue'
+import GameSessionService from '../service/GameSessionService.js'
+import MemberService from '../service/MemberService.js'
+import GameService from '../service/GameService.js'
+import SessionParticipantService from '../service/SessionParticipantService.js'
 
-const gameSessions = ref([
-  {
-    sessionId: 1,
-    game: 'Catan',
-    date: '2026-05-02',
-    participants: [
-      { memberId: 1, name: 'Anna Andersson', score: 10, winner: true },
-      { memberId: 2, name: 'Bo Bengtsson', score: 7, winner: false }
-    ]
-  },
-  {
-    sessionId: 2,
-    game: 'Ticket to Ride',
-    date: '2026-05-02',
-    participants: [
-      { memberId: 1, name: 'Anna Andersson', score: 80, winner: false },
-      { memberId: 3, name: 'Lisa Larsson', score: 110, winner: true }
-    ]
+const memberService = new MemberService()
+const gameService = new GameService()
+const sessionParticipantService = new SessionParticipantService()
+
+const members = ref([])
+const games = ref([])
+
+const gameSessions = ref([])
+const gameSessionService = new GameSessionService()
+
+onMounted(async () => {
+  gameSessions.value = await gameSessionService.getAll()
+  members.value = await memberService.getAll()
+  games.value = await gameService.getAll()
+})
+
+async function deleteSession(session) {
+  for (const participant of session.participants) {
+    await sessionParticipantService.delete(participant.id)
   }
-])
+
+  await gameSessionService.delete(session.sessionId)
+
+  gameSessions.value = gameSessions.value.filter(
+      s => s.sessionId !== session.sessionId
+  )
+}
+
+async function saveSession() {
+  const createdSession = await gameSessionService.create(
+      formSession.value.gameId,
+      formSession.value.date
+  )
+
+  console.log(createdSession)
+  console.log(formSession.value.participants)
+
+  for (const player of formSession.value.participants) {
+    await sessionParticipantService.create({
+      member: {
+        memberId: player.memberId
+      },
+      gameSession: {
+        sessionId: createdSession.sessionId
+      },
+      score: player.score,
+      winner: player.winner
+    })
+  }
+
+  gameSessions.value = await gameSessionService.getAll()
+  closeForm()
+}
+
 
 const showForm = ref(false)
 const editingId = ref(null)
 
 const formSession = ref({
-  game: '',
+  sessionId: null,
+  gameId: '',
   date: '',
   participants: []
 })
 
 function openAddForm() {
   editingId.value = null
+
   formSession.value = {
-    game: '',
+    sessionId: null,
+    gameId: '',
     date: '',
     participants: []
   }
+
   showForm.value = true
 }
 
@@ -45,57 +87,50 @@ function openEditForm(session) {
   editingId.value = session.sessionId
 
   formSession.value = {
-    game: session.game,
+    sessionId: session.sessionId,
+    gameId: session.game.gameId,
     date: session.date,
-    participants: session.participants.map(player => ({ ...player }))
+    participants: session.participants.map(player => ({
+      id: player.id,
+      memberId: player.member.memberId,
+      score: player.score,
+      winner: player.winner
+    }))
   }
 
   showForm.value = true
 }
 
+
 function addParticipant() {
   formSession.value.participants.push({
-    memberId: Date.now(),
-    name: '',
+    id: null,
+    memberId: '',
     score: 0,
     winner: false
   })
 }
 
-function removeParticipant(index) {
-  formSession.value.participants.splice(index, 1)
-}
 
-function saveSession() {
-  if (editingId.value === null) {
-    gameSessions.value.push({
-      sessionId: Date.now(),
-      ...formSession.value
-    })
-  } else {
-    const index = gameSessions.value.findIndex(
-        session => session.sessionId === editingId.value
-    )
+async function removeParticipant(index) {
+  const participant = formSession.value.participants[index]
 
-    gameSessions.value[index] = {
-      sessionId: editingId.value,
-      ...formSession.value
-    }
+  if (participant.id !== null && participant.id !== undefined) {
+    await sessionParticipantService.delete(participant.id)
   }
 
-  closeForm()
+  formSession.value.participants.splice(index, 1)
+  gameSessions.value = await gameSessionService.getAll()
 }
 
-function deleteSession(sessionId) {
-  gameSessions.value = gameSessions.value.filter(
-      session => session.sessionId !== sessionId
-  )
-}
 
 function closeForm() {
   showForm.value = false
   editingId.value = null
+
 }
+
+
 </script>
 
 <template>
@@ -106,12 +141,21 @@ function closeForm() {
       Lägg till spelomgång
     </button>
 
-    <form v-if="showForm" class="session-form" @submit.prevent="saveSession">
+    <form v-if="showForm && editingId === null" class="session-form" @submit.prevent="saveSession">
       <h3>{{ editingId === null ? 'Ny spelomgång' : 'Redigera spelomgång' }}</h3>
 
       <label>
         Spel
-        <input v-model="formSession.game" type="text" required>
+        <select v-model.number="formSession.gameId" required>
+          <option disabled value="">Välj spel</option>
+          <option
+              v-for="game in games"
+              :key="game.gameId"
+              :value="game.gameId"
+          >
+            {{ game.gameName }}
+          </option>
+        </select>
       </label>
 
       <label>
@@ -123,13 +167,29 @@ function closeForm() {
 
       <div
           v-for="(player, index) in formSession.participants"
-          :key="player.memberId"
+          :key="index"
           class="participant-row"
       >
-        <input v-model="player.name" type="text" placeholder="Namn" required>
-        <input v-model.number="player.score" type="number" placeholder="Poäng">
+        <label>
+          Medlem
+          <select v-model.number="player.memberId" required>
+            <option disabled value="">Välj medlem</option>
+            <option
+                v-for="member in members"
+                :key="member.memberId"
+                :value="member.memberId"
+            >
+              {{ member.name }}
+            </option>
+          </select>
+        </label>
 
         <label>
+          Poäng
+          <input v-model.number="player.score" type="number">
+        </label>
+
+        <label class="checkbox-label">
           <input v-model="player.winner" type="checkbox">
           Vinnare
         </label>
@@ -142,7 +202,6 @@ function closeForm() {
       <button type="button" @click="addParticipant">
         + Lägg till deltagare
       </button>
-
       <div class="form-actions">
         <button type="submit">
           Spara
@@ -156,40 +215,118 @@ function closeForm() {
 
     <article
         v-for="session in gameSessions"
-        :key="session.sessionId"
-        class="session-card"
-    >
-      <h3>{{ session.game }}</h3>
-      <p>Datum: {{ session.date }}</p>
+        :key="session.gameSessionId"
+        class="session-card">
+
+      <form v-if="showForm && editingId === session.sessionId" class="session-form" @submit.prevent="saveSession">
+        <h3>{{ editingId === null ? 'Ny spelomgång' : 'Redigera spelomgång' }}</h3>
+
+        <label>
+          Spel
+          <select v-model.number="formSession.gameId" required>
+            <option disabled value="">Välj spel</option>
+            <option
+                v-for="game in games"
+                :key="game.gameId"
+                :value="game.gameId"
+            >
+              {{ game.gameName }}
+            </option>
+          </select>
+        </label>
+
+        <label>
+          Datum
+          <input v-model="formSession.date" type="date" required>
+        </label>
+
+        <h4>Deltagare</h4>
+
+        <div
+            v-for="(player, index) in formSession.participants"
+            :key="index"
+            class="participant-row"
+        >
+          <label>
+            Medlem
+            <select v-model.number="player.memberId" required>
+              <option disabled value="">Välj medlem</option>
+              <option
+                  v-for="member in members"
+                  :key="member.memberId"
+                  :value="member.memberId"
+              >
+                {{ member.name }}
+              </option>
+            </select>
+          </label>
+
+          <label>
+            Poäng
+            <input v-model.number="player.score" type="number">
+          </label>
+
+          <label class="checkbox-label">
+            <input v-model="player.winner" type="checkbox">
+            Vinnare
+          </label>
+
+          <button type="button" @click="removeParticipant(index)">
+            Ta bort deltagare
+          </button>
+        </div>
+
+        <button type="button" @click="addParticipant">
+          + Lägg till deltagare
+        </button>
+        <div class="form-actions">
+          <button type="submit">
+            Spara
+          </button>
+
+          <button type="button" @click="closeForm">
+            Avbryt
+          </button>
+        </div>
+      </form>
+
+
+      <div class="session-header">
+        <div>
+          <h3>{{ session.game.gameName }}</h3>
+          <p>Datum: {{ session.date }}</p>
+        </div>
+
+        <div class="session-actions">
+          <button @click="openEditForm(session)">Redigera</button>
+          <button @click="deleteSession(session)">Ta bort</button>
+        </div>
+      </div>
+
+      <div class="game-info">
+        <span>Kategori: {{ session.game.category }}</span>
+        <span>Spelare: {{ session.game.totalPlayers }}</span>
+        <span>Ålder: {{ session.game.recommendedAge }}+</span>
+        <span>Speltid: {{ session.game.averagePlayTime }} min</span>
+      </div>
 
       <table>
         <thead>
         <tr>
-          <th>Medlem</th>
+          <th>Spelare</th>
           <th>Poäng</th>
           <th>Vinnare</th>
         </tr>
         </thead>
 
         <tbody>
-        <tr
-            v-for="player in session.participants"
-            :key="player.memberId"
-        >
-          <td>{{ player.name }}</td>
+        <tr v-for="player in session.participants" :key="player.id">
+          <td>{{ player.member?.name }}</td>
           <td>{{ player.score }}</td>
-          <td>{{ player.winner ? 'Ja' : 'Nej' }}</td>
+          <td>{{ player.winner || player.isWinner ? 'Ja' : 'Nej' }}</td>
         </tr>
         </tbody>
       </table>
-
-      <button @click="openEditForm(session)">
-        Redigera
-      </button>
-
-      <button @click="deleteSession(session.sessionId)">
-        Ta bort
-      </button>
     </article>
   </section>
 </template>
@@ -199,8 +336,7 @@ function closeForm() {
   padding: 2rem;
 }
 
-.session-form,
-.session-card {
+.session-form {
   margin-top: 1.5rem;
   padding: 1rem;
   border: 1px solid #ddd;
@@ -230,16 +366,58 @@ button {
   margin-right: 0.5rem;
 }
 
+.session-card {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+}
+
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.session-header h3 {
+  margin: 0;
+}
+
+.session-header p {
+  margin: 0.25rem 0 0;
+}
+
+.game-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.game-info span {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+.session-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
 table {
   width: 100%;
-  margin: 1rem 0;
+  margin-top: 1rem;
   border-collapse: collapse;
 }
 
 th,
 td {
   border: 1px solid #ddd;
-  padding: 0.5rem;
+  padding: 0.75rem;
   text-align: center;
 }
 </style>
