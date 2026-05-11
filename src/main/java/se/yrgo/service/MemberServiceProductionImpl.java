@@ -66,14 +66,14 @@ public class MemberServiceProductionImpl implements MemberService{
     }
 
     @Override
-    public void updateMember(Integer id, String name, String email, Boolean membershipFeePaid, Integer totalWins, Integer age) {
+    public void updateMember(Integer id, Member member) {
         Member memberToUpdate = getById(id);
 
-        if (name != null) memberToUpdate.setName(name);
-        if (email != null) memberToUpdate.setEmail(email);
-        if (membershipFeePaid != null) memberToUpdate.setMembershipFeePaid(membershipFeePaid);
-        if (totalWins != null) memberToUpdate.setTotalWins(totalWins);
-        if (age != null) memberToUpdate.setAge(age);
+        if (member.getName() != null) memberToUpdate.setName(member.getName());
+        if (member.getEmail() != null) memberToUpdate.setEmail(member.getEmail());
+        if (member.getMembershipFeePaid() != null) memberToUpdate.setMembershipFeePaid(member.getMembershipFeePaid());
+        if (member.getTotalWins() != null) memberToUpdate.setTotalWins(member.getTotalWins());
+        if (member.getAge() != null) memberToUpdate.setAge(member.getAge());
 
         memberDao.updateMember(memberToUpdate);
     }

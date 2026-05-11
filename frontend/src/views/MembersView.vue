@@ -36,51 +36,39 @@ async function getMembers() {
 
 function openAddForm() {
   editingId.value = null
-  // formMember.value = {
-  //   memberId: '',
-  //   name: '',
-  //   totalWins: '',
-  //   email: '',
-  //   membershipFeePaid: false,
-  //   age: '',
-  // }
   showForm.value = true
 }
 
-function openEditForm(member) {
-  editingId.value = member.id
+async function openEditForm(member) {
+  const service = new MemberService();
+  const memberFromDB = await service.getByEmail(member.email);
+  console.log('member id: ' + memberFromDB.memberId);
+
+  editingId.value = memberFromDB.memberId;
   formMember.value = {...member}
   showForm.value = true
 }
 
 async function saveMember() {
-  // if (editingId.value === null) {
-  //   members.value.push({
-  //     id: Date.now(),
-  //     ...formMember.value
-  //   })
-  // } else {
-  //   const index = members.value.findIndex(member => member.id === editingId.value)
-  //
-  //   members.value[index] = {
-  //     id: editingId.value,
-  //     ...formMember.value
-  //   }
   const service = new MemberService();
   const memberFromForm = new Member(formMember.value)
 
   if (editingId.value === null) {
     await service.registerNewMember(memberFromForm);
   } else {
-    await service.updateMember(memberFromForm);
+    await service.updateMember(editingId.value, memberFromForm);
   }
 
   members.value = await service.getAll();
   closeForm();
 }
 
-function deleteMember(memberId) {
-  members.value = members.value.filter(member => member.id !== memberId)
+async function deleteMember(email) {
+  const service = new MemberService();
+  const member = await service.getByEmail(email);
+  await service.deleteMember(member.memberId);
+
+  members.value = await service.getAll();
 }
 
 function closeForm() {
@@ -146,7 +134,7 @@ function closeForm() {
         <td>{{ member.membershipFeePaid ? 'Ja' : 'Nej' }}</td>
         <td>
           <button @click="openEditForm(member)">Redigera</button>
-          <button @click="deleteMember(member.memberId)">Ta bort</button>
+          <button @click="deleteMember(member.email)">Ta bort</button>
         </td>
       </tr>
       </tbody>

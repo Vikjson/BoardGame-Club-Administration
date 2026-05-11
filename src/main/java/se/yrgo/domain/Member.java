@@ -81,6 +81,10 @@ public class Member {
         return email;
     }
 
+    public Boolean getMembershipFeePaid() {
+        return membershipFeePaid;
+    }
+
     public Boolean isMembershipFeePaid() {
         return membershipFeePaid;
     }
@@ -113,20 +117,4 @@ public class Member {
         this.age = age;
     }
 
-    /**
-     * For debugging. TODO: delete later!
-     *
-     * @return
-     */
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + memberId +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", membershipFeePaid=" + membershipFeePaid +
-                ", totalWins=" + totalWins +
-                ", age=" + age +
-                '}';
-    }
 }

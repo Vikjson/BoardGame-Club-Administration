@@ -79,16 +79,12 @@ public class MemberController {
     @PutMapping("/{id}")
     public void updateMember(
             @PathVariable Integer id,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) Boolean membershipFeePaid,
-            @RequestParam(required = false) Integer totalWins,
-            @RequestParam(required = false) Integer age
+            @RequestBody Member member
     ) {
-        if (id < 1) {
+        if (id == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'id' parameter.");
         }
 
-        memberService.updateMember(id, name, email, membershipFeePaid, totalWins, age);
+        memberService.updateMember(id, member);
     }
 }

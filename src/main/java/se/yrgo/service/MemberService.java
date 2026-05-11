@@ -15,5 +15,5 @@ public interface MemberService {
 
     Member getByEmail(String email);
 
-    void updateMember(Integer id, String name, String email, Boolean membershipFeePaid, Integer totalWins, Integer age);
+    void updateMember(Integer id, Member member);
 }

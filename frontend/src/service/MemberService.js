@@ -6,7 +6,7 @@ class MemberService {
         this.apiService = new ApiService();
     }
 
-    async getAll(){
+    async getAll() {
         try {
             const members = [];
             const json = await this.apiService.getData('/members');
@@ -39,12 +39,20 @@ class MemberService {
         }
     }
 
-    async updateMember(member, newMember) {
+    async updateMember(id, member) {
         try {
-            const memberFromDb = await this.getByEmail(member.email)
-            await this.apiService.putData(`/members/${memberFromDb.id}`, newMember);
-        }  catch (e) {
+            await this.apiService.putData(`/members/${id}`, member);
+        } catch (e) {
             console.error('Failed to update member ' + member.name + '.');
+            throw e;
+        }
+    }
+
+    async deleteMember(id) {
+        try {
+            await this.apiService.deleteData(`/members/${id}`);
+        } catch (e) {
+            console.error('Failed to delete member with id ' + id + '.');
             throw e;
         }
     }
