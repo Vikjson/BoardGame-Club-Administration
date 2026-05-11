@@ -72,4 +72,6 @@ public class SessionParticipant {
         isWinner = winner;
     }
 
-   }
+    public void setId(int id) {
+    }
+}

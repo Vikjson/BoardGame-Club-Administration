@@ -8,7 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import se.yrgo.data.GameSessionDao;
 import se.yrgo.data.SessionParticipantDao;
+import se.yrgo.data.MemberDao;
+import se.yrgo.domain.GameSession;
+import se.yrgo.domain.Member;
 import se.yrgo.domain.SessionParticipant;
 import se.yrgo.error.EntityNotFoundException;
 
@@ -18,6 +22,8 @@ import java.util.List;
 @Service
 public class SessionParticipantServiceProdImpl implements SessionParticipantService {
     private SessionParticipantDao sessionParticipantDao;
+    private MemberDao memberDao;
+    private GameSessionDao gameSessionDao;
 
     @Autowired
     public SessionParticipantServiceProdImpl(SessionParticipantDao sessionParticipantDao) {
@@ -31,6 +37,27 @@ public class SessionParticipantServiceProdImpl implements SessionParticipantServ
         } catch (EntityExistsException e) {
             throw new RuntimeException("Session participant already exists");
         }
+    }
+
+
+    @Override
+    public SessionParticipant updateSessionParticipant(SessionParticipant participant) {
+        System.out.println("UPDATE participant id = " + participant.getId());
+        SessionParticipant existingParticipant =
+                sessionParticipantDao.getById(participant.getId());
+
+
+
+        Member member = memberDao.getById(participant.getMember().getMemberId());
+        GameSession gameSession =
+                gameSessionDao.getById(participant.getGameSession().getSessionId());
+
+        existingParticipant.setMember(member);
+        existingParticipant.setGameSession(gameSession);
+        existingParticipant.setScore(participant.getScore());
+        existingParticipant.setWinner(participant.isWinner());
+
+        return sessionParticipantDao.updateSessionParticipant(existingParticipant);
     }
 
     @Override

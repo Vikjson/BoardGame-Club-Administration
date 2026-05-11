@@ -8,6 +8,8 @@ public interface SessionParticipantService {
 
     void createSessionParticipant(SessionParticipant sessionParticipant);
 
+    SessionParticipant updateSessionParticipant(SessionParticipant sessionParticipant);
+
     SessionParticipant getById(int participantId);
 
     List<SessionParticipant> getByMemberId(int id);
