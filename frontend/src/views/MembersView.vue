@@ -3,10 +3,6 @@ import {ref, computed} from 'vue'
 import MemberService from "../service/MemberService.js";
 import {Member} from "../entities/Member.js";
 
-// const members = ref([
-//   { id: 1, firstName: 'Anna', lastName: 'Andersson', email: 'anna@mail.com', paid: true },
-//   { id: 2, firstName: 'Bo', lastName: 'Bengtsson', email: 'bo@mail.com', paid: false }
-// ])
 
 const members = ref([])
 getMembers();
@@ -40,15 +36,14 @@ async function getMembers() {
 
 function openAddForm() {
   editingId.value = null
-  formMember.value = {
-    memberId: '',
-    firstName: '',
-    lastName: '',
-    totalWins: '',
-    email: '',
-    membershipFeePaid: false,
-    age: '',
-  }
+  // formMember.value = {
+  //   memberId: '',
+  //   name: '',
+  //   totalWins: '',
+  //   email: '',
+  //   membershipFeePaid: false,
+  //   age: '',
+  // }
   showForm.value = true
 }
 
@@ -71,14 +66,17 @@ async function saveMember() {
   //     id: editingId.value,
   //     ...formMember.value
   //   }
+  const service = new MemberService();
+  const memberFromForm = new Member(formMember.value)
 
   if (editingId.value === null) {
-    const service = new MemberService();
-    const memberToAdd = new Member(formMember.value)
-    await service.registerNewMember(memberToAdd);
+    await service.registerNewMember(memberFromForm);
+  } else {
+    await service.updateMember(memberFromForm);
   }
 
-  closeForm()
+  members.value = await service.getAll();
+  closeForm();
 }
 
 function deleteMember(memberId) {
@@ -106,13 +104,8 @@ function closeForm() {
       <h3>{{ editingId === null ? 'Lägg till medlem' : 'Redigera medlem' }}</h3>
 
       <label>
-        Förnamn
-        <input v-model="formMember.firstName" type="text" required>
-      </label>
-
-      <label>
-        Efternamn
-        <input v-model="formMember.lastName" type="text" required>
+        För- och efternamn
+        <input v-model="formMember.name" type="text" required>
       </label>
 
       <label>

@@ -21,11 +21,30 @@ class MemberService {
         }
     }
 
+    async getByEmail(email) {
+        try {
+            return await this.apiService.getData(`/members/email/${email}`)
+        } catch (e) {
+            console.error('Error fetching member with email ' + email);
+            throw e;
+        }
+    }
+
     async registerNewMember(member) {
         try {
             await this.apiService.postData('/members', member);
         } catch (e) {
             console.error('Failed to register member ' + member.name + '.');
+            throw e;
+        }
+    }
+
+    async updateMember(member, newMember) {
+        try {
+            const memberFromDb = await this.getByEmail(member.email)
+            await this.apiService.putData(`/members/${memberFromDb.id}`, newMember);
+        }  catch (e) {
+            console.error('Failed to update member ' + member.name + '.');
             throw e;
         }
     }
