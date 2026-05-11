@@ -57,6 +57,9 @@ const fetchGameId = ref('')
 const showFetchByNameForm = ref(false)
 const fetchGameName = ref('')
 
+const errorMessage = ref('')
+const showError = ref(false)
+
 function openFetchForm() {
   showFetchForm.value = true
 }
@@ -77,29 +80,25 @@ function closeFetchByNameForm() {
 
 async function fetchGameById() {
   try {
-
     const game = await gameService.getById(fetchGameId.value)
-
     games.value = [game]
-
     closeFetchForm()
-
   } catch (err) {
     console.error(err)
+    errorMessage.value = "Detta ID finns inte."
+    showError.value = true
   }
 }
 
 async function fetchGameByName() {
   try {
-
     const game = await gameService.getByName(fetchGameName.value)
-
     games.value = [game]
-
     closeFetchByNameForm()
-
   } catch (err) {
     console.error(err)
+    errorMessage.value = "Detta game finns inte."
+    showError.value = true
   }
 }
 
@@ -143,7 +142,8 @@ async function deleteGame(gameId) {
   } catch (err) {
     console.error(err)
 
-    alert("Kan inte ta bort spelet eftersom det fortfarande används.")
+    errorMessage.value = ("Kan inte ta bort spelet eftersom det fortfarande används.")
+    showError.value = true
   }
 }
 
@@ -160,7 +160,6 @@ function closeForm() {
     <button @click="openAddForm">Lägg till spel</button>
     <button @click="openFetchForm">Hämta spel via id</button>
     <button @click="openFetchByNameForm">Hämta spel via name</button>
-
 
     <form v-if="showForm" class="form" @submit.prevent="saveGame">
       <h3 class="form-title">
