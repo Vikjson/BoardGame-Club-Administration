@@ -10,15 +10,39 @@ onMounted(async () => {
 })
 
 async function saveGame() {
-  if (editingId.value === null) {
-    await gameService.create(formGame.value)
-  } else {
-    await gameService.update(editingId.value, formGame.value)
-  }
+  try {
 
-  games.value = await gameService.getAll()
-  closeForm()
+    if (editingId.value !== null) {
+
+      // if contains a gameId, run create
+      const updatedGame = await gameService.update(
+        editingId.value,
+        formGame.value
+      )
+
+      const index = games.value.findIndex(
+        game => game.gameId === editingId.value
+      )
+
+      if (index !== -1) {
+        games.value[index] = updatedGame.data ?? updatedGame
+      }
+
+    } else {
+
+      // if else create a new 
+      const createdGame = await gameService.create(formGame.value)
+
+      games.value.push(createdGame.data ?? createdGame)
+    }
+
+    closeForm()
+
+  } catch (err) {
+    console.error(err)
+  }
 }
+
 
 const showForm = ref(false)
 const editingId = ref(null)
@@ -38,14 +62,14 @@ const formGame = ref({
 function openAddForm() {
   editingId.value = null
   formGame.value = {
-    name: '',
-    purchaseDate: '',
-    players: '',
-    category: '',
-    age: 0,
-    playTime: 0,
-    description: '',
-    clubComment: ''
+  gameName: '',
+  purchaseDate: '',
+  totalPlayers: 0,
+  category: '',
+  recommendedAge: 0,
+  averagePlayTime: 0,
+  description: '',
+  memberComment: ''
   }
   showForm.value = true
 }
@@ -80,28 +104,27 @@ function closeForm() {
       </h3>
 
       <label for="game-name">Spelnamn</label>
-      <input id="game-name" v-model="formGame.name" type="text" required>
+      <input id="game-name" v-model="formGame.gameName" type="text" required>
 
       <label for="purchase-date">Inköpsdatum</label>
       <input id="purchase-date" v-model="formGame.purchaseDate" type="date">
 
       <label for="players">Antal spelare</label>
-      <input id="players" v-model="formGame.players" type="text" placeholder="t.ex. 2-4">
+      <input id="players" v-model="formGame.totalPlayers" type="text" placeholder="t.ex. 2-4">
 
       <label for="category">Kategori</label>
       <input id="category" v-model="formGame.category" type="text">
 
       <label for="age">Ålder</label>
-      <input id="age" v-model.number="formGame.age" type="number" min="0">
+      <input id="age" v-model.number="formGame.recommendedAge" type="number" min="0">
 
       <label for="play-time">Genomsnittlig speltid</label>
-      <input id="play-time" v-model.number="formGame.playTime" type="number" min="0" placeholder="minuter">
-
+      <input id="play-time" v-model.number="formGame.averagePlayTime" type="number" min="0" placeholder="minuter">
       <label for="description">Spelbeskrivning</label>
       <textarea id="description" v-model="formGame.description"></textarea>
 
       <label for="club-comment">Klubbens kommentar</label>
-      <textarea id="club-comment" v-model="formGame.clubComment"></textarea>
+      <textarea id="club-comment" v-model="formGame.memberComment"></textarea>
 
       <div class="form-actions">
         <button type="submit">Spara</button>
@@ -122,7 +145,7 @@ function closeForm() {
       </thead>
 
       <tbody>
-      <tr v-for="game in games" :key="game.id">
+      <tr v-for="game in games" :key="game.gameId">
         <td>{{ game.gameName }}</td>
         <td>{{ game.category }}</td>
         <td>{{ game.totalPlayers }}</td>
@@ -130,7 +153,7 @@ function closeForm() {
         <td>{{ game.averagePlayTime }} min</td>
         <td>
           <button @click="openEditForm(game)">Redigera</button>
-          <button @click="deleteGame(game.id)">Ta bort</button>
+          <button @click="deleteGame(game.gameId)">Ta bort</button>
         </td>
       </tr>
       </tbody>
