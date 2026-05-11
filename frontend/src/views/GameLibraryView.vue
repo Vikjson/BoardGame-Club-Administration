@@ -5,37 +5,41 @@ import GameService from '../service/GameService.js'
 const games = ref([])
 const gameService = new GameService()
 
+async function loadGames() {
+  games.value = await gameService.getAll()
+}
+
+async function openLibrary() {
+  await loadGames()
+}
+
+onMounted(async () => {await loadGames()
+})
+
 onMounted(async () => {
   games.value = await gameService.getAll()
 })
 
+function isDuplicateName(name) {
+  return games.value.some(
+    g => g.gameName?.toLowerCase() === name?.toLowerCase()
+  )
+}
+
 async function saveGame() {
   try {
-
-    if (editingId.value !== null) {
-
-      // if contains a gameId, run create
-      const updatedGame = await gameService.update(
-        editingId.value,
-        formGame.value
-      )
-
-      const index = games.value.findIndex(
-        game => game.gameId === editingId.value
-      )
-
-      if (index !== -1) {
-        games.value[index] = updatedGame.data ?? updatedGame
+    if (editingId.value === null) {
+      if (isDuplicateName(formGame.value.gameName)) {
+        alert("Det här spelet finns redan, inga fler kan läggas till!")
+        return
       }
-
-    } else {
-
-      // if else create a new 
-      const createdGame = await gameService.create(formGame.value)
-
-      games.value.push(createdGame.data ?? createdGame)
     }
-
+    if (editingId.value !== null) {
+      await gameService.update(editingId.value, formGame.value)
+    } else {
+      await gameService.create(formGame.value)
+    }
+    await loadGames()
     closeForm()
 
   } catch (err) {
@@ -47,6 +51,57 @@ async function saveGame() {
 const showForm = ref(false)
 const editingId = ref(null)
 
+const showFetchForm = ref(false)
+const fetchGameId = ref('')
+
+const showFetchByNameForm = ref(false)
+const fetchGameName = ref('')
+
+function openFetchForm() {
+  showFetchForm.value = true
+}
+
+function closeFetchForm() {
+  showFetchForm.value = false
+  fetchGameId.value = ''
+}
+
+function openFetchByNameForm() {
+  showFetchByNameForm.value = true
+}
+
+function closeFetchByNameForm() {
+  showFetchByNameForm.value = false
+  fetchGameName.value = ''
+}
+
+async function fetchGameById() {
+  try {
+
+    const game = await gameService.getById(fetchGameId.value)
+
+    games.value = [game]
+
+    closeFetchForm()
+
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+async function fetchGameByName() {
+  try {
+
+    const game = await gameService.getByName(fetchGameName.value)
+
+    games.value = [game]
+
+    closeFetchByNameForm()
+
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 const formGame = ref({
   gameName: '',
@@ -82,8 +137,14 @@ function openEditForm(game) {
 
 
 async function deleteGame(gameId) {
-  await gameService.delete(gameId)
-  games.value = games.value.filter(game => game.gameId !== gameId)
+  try {
+    await gameService.delete(gameId)
+    games.value = games.value.filter(game => game.gameId !== gameId)
+  } catch (err) {
+    console.error(err)
+
+    alert("Kan inte ta bort spelet eftersom det fortfarande används.")
+  }
 }
 
 function closeForm() {
@@ -95,8 +156,11 @@ function closeForm() {
 <template>
   <section class="game-library-view">
     <h2>Hantera spelbibliotek</h2>
-
+    <button @click="openLibrary">Spel lista</button>
     <button @click="openAddForm">Lägg till spel</button>
+    <button @click="openFetchForm">Hämta spel via id</button>
+    <button @click="openFetchByNameForm">Hämta spel via name</button>
+
 
     <form v-if="showForm" class="form" @submit.prevent="saveGame">
       <h3 class="form-title">
@@ -131,6 +195,59 @@ function closeForm() {
         <button type="button" @click="closeForm">Avbryt</button>
       </div>
     </form>
+
+    <div v-if="showFetchForm" class="fetch-form">
+
+  <label for="fetch-id">Game ID</label>
+
+  <input
+    id="fetch-id"
+    v-model="fetchGameId"
+    type="number"
+  >
+
+  <div class="form-actions">
+
+    <button @click="fetchGameById">
+      Hämta
+    </button>
+
+    <button @click="closeFetchForm">
+      Avbryt
+    </button>
+
+  </div>
+
+</div>
+
+<div v-if="showFetchByNameForm" class="fetch-form">
+
+  <label for="fetch-name">Spelnamn</label>
+
+  <input
+    id="fetch-name"
+    v-model="fetchGameName"
+    type="text"
+  >
+
+  <div class="form-actions">
+
+    <button @click="fetchGameByName">
+      Hämta
+    </button>
+
+    <button @click="closeFetchByNameForm">
+      Avbryt
+    </button>
+
+  </div>
+
+</div>
+
+<div v-if="showError" class="popup">
+  <p>{{ errorMessage }}</p>
+  <button @click="showError = false">OK</button>
+</div>
 
     <table>
       <thead>
