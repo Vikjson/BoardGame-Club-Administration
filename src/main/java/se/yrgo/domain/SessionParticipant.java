@@ -73,5 +73,6 @@ public class SessionParticipant {
     }
 
     public void setId(int id) {
+        this.id = id;
     }
 }

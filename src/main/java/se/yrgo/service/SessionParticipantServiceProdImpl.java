@@ -21,13 +21,18 @@ import java.util.List;
 @Transactional
 @Service
 public class SessionParticipantServiceProdImpl implements SessionParticipantService {
-    private SessionParticipantDao sessionParticipantDao;
-    private MemberDao memberDao;
-    private GameSessionDao gameSessionDao;
+    private final SessionParticipantDao sessionParticipantDao;
+    private final MemberDao memberDao;
+    private final GameSessionDao gameSessionDao;
 
     @Autowired
-    public SessionParticipantServiceProdImpl(SessionParticipantDao sessionParticipantDao) {
+    public SessionParticipantServiceProdImpl(
+            SessionParticipantDao sessionParticipantDao,
+            MemberDao memberDao,
+            GameSessionDao gameSessionDao) {
         this.sessionParticipantDao = sessionParticipantDao;
+        this.memberDao = memberDao;
+        this.gameSessionDao = gameSessionDao;
     }
 
     @Override
@@ -45,7 +50,6 @@ public class SessionParticipantServiceProdImpl implements SessionParticipantServ
         System.out.println("UPDATE participant id = " + participant.getId());
         SessionParticipant existingParticipant =
                 sessionParticipantDao.getById(participant.getId());
-
 
 
         Member member = memberDao.getById(participant.getMember().getMemberId());
