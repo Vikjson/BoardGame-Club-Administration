@@ -1,6 +1,7 @@
 package se.yrgo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,8 +29,8 @@ public class MemberController {
 
     @GetMapping("id/{id}")
     public Member getById(@PathVariable Integer id) {
-        if (id < 1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'id' parameter.");
+        if (id == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing 'id' in URL path.");
         }
 
         try {
@@ -43,7 +44,7 @@ public class MemberController {
 
     @GetMapping("email/{email}")
     public Member getByEmail(@PathVariable String email) {
-        if (!email.contains("@")) {
+        if (email == null || !email.contains("@")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email parameter.");
         }
 
@@ -59,7 +60,10 @@ public class MemberController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createMember(@RequestBody Member newMember) {
-        System.out.println("---------- Member to add: " + newMember);
+        if (newMember == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Unable to read request body correctly. Only JSON format is supported. ");
+        }
         if (newMember.getMemberId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client is trying to set a value on readonly param 'id'");
         }
@@ -69,11 +73,15 @@ public class MemberController {
 
     @DeleteMapping("/{id}")
     public void deleteMember(@PathVariable Integer id) {
-        if (id < 1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'id' parameter.");
+        if (id == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing 'id' in URL path.");
         }
 
-        memberService.deleteMember(id);
+        try {
+            memberService.deleteMember(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
     }
 
     @PutMapping("/{id}")
@@ -82,7 +90,11 @@ public class MemberController {
             @RequestBody Member member
     ) {
         if (id == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'id' parameter.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing 'id' in URL path.");
+        }
+        if (member == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Unable to read request body correctly. Only JSON format is supported. ");
         }
 
         memberService.updateMember(id, member);

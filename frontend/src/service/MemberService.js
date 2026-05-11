@@ -52,7 +52,11 @@ class MemberService {
         try {
             await this.apiService.deleteData(`/members/${id}`);
         } catch (e) {
-            console.error('Failed to delete member with id ' + id + '.');
+            if (e.cause === 409) {
+                alert('Den här medlemmen är registrerad i spelomgångar som inte kan tas bort. ' +
+                    'Var god att välj \'Arkivera\' istället. (Upcoming feature, finns ej i nuläget.)')
+                return;
+            }
             throw e;
         }
     }

@@ -7,7 +7,7 @@ class ApiService {
         const response = await fetch(this.apiUrl + endpoint, options)
 
         if (!response.ok) {
-            throw new Error(`Request failed: ${response.status}`)
+            throw new Error(`Request failed: ${response.status}`, {cause: response.status})
         }
 
         if (response.status === 204) {

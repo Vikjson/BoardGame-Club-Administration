@@ -3,6 +3,7 @@ package se.yrgo.service;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.NoResultException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.yrgo.data.MemberDao;
@@ -61,7 +62,7 @@ public class MemberServiceProductionImpl implements MemberService{
             Member memberToDelete = getById(id);
             memberDao.deleteMember(memberToDelete);
         } catch (MemberNotFoundException e){
-            throw new MemberNotFoundException("Unable to delete:" + e.getMessage());
+            throw new MemberNotFoundException("Unable to find member:" + e.getMessage());
         }
     }
 
