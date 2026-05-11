@@ -27,7 +27,7 @@ public class MemberController {
     }
 
     @GetMapping("id/{id}")
-    public Member getById(@PathVariable int id) {
+    public Member getById(@PathVariable Integer id) {
         if (id < 1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'id' parameter.");
         }
@@ -59,7 +59,8 @@ public class MemberController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createMember(@RequestBody Member newMember) {
-        if (newMember.getMemberId() != 0) {
+        System.out.println("---------- Member to add: " + newMember);
+        if (newMember.getMemberId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client is trying to set a value on readonly param 'id'");
         }
 
@@ -67,7 +68,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMember(@PathVariable int id) {
+    public void deleteMember(@PathVariable Integer id) {
         if (id < 1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid 'id' parameter.");
         }
@@ -77,7 +78,7 @@ public class MemberController {
 
     @PutMapping("/{id}")
     public void updateMember(
-            @PathVariable int id,
+            @PathVariable Integer id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) Boolean membershipFeePaid,

@@ -10,15 +10,15 @@ import org.jspecify.annotations.NonNull;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int memberId;
+    private Integer memberId;
 
     @Column(nullable = false)
     private String name;
     private String email;
-    private boolean membershipFeePaid;
-    private int totalWins;
+    private Boolean membershipFeePaid;
+    private Integer totalWins;
     @Column(nullable = false)
-    private int age;
+    private Integer age;
 
     public Member() {
     }
@@ -33,8 +33,8 @@ public class Member {
      * @param age               Members age. Required, cannot be less than 1.
      * @throws IllegalArgumentException if any required parameters are missing or invalid.
      */
-    public Member(@NonNull String name, String email, boolean membershipFeePaid, int totalWins, int age) {
-        if (age < 1) {
+    public Member(@NonNull String name, String email, Boolean membershipFeePaid, Integer totalWins, Integer age) {
+        if (age == null || age < 1) {
             throw new IllegalArgumentException("Invalid 'age' parameter.");
         }
         if (name.isEmpty()) {
@@ -60,7 +60,7 @@ public class Member {
      * @param totalWins
      * @param age
      */
-    public Member(int memberId, String name, String email, boolean membershipFeePaid, int totalWins, int age) {
+    public Member(Integer memberId, String name, String email, Boolean membershipFeePaid, Integer totalWins, Integer age) {
         this.memberId = memberId;
         this.name = name;
         this.email = email;
@@ -69,7 +69,7 @@ public class Member {
         this.age = age;
     }
 
-    public int getMemberId() {
+    public Integer getMemberId() {
         return memberId;
     }
 
@@ -81,15 +81,15 @@ public class Member {
         return email;
     }
 
-    public boolean isMembershipFeePaid() {
+    public Boolean isMembershipFeePaid() {
         return membershipFeePaid;
     }
 
-    public int getTotalWins() {
+    public Integer getTotalWins() {
         return totalWins;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
@@ -101,15 +101,15 @@ public class Member {
         this.email = email;
     }
 
-    public void setMembershipFeePaid(boolean membershipFeePaid) {
+    public void setMembershipFeePaid(Boolean membershipFeePaid) {
         this.membershipFeePaid = membershipFeePaid;
     }
 
-    public void setTotalWins(int totalWins) {
+    public void setTotalWins(Integer totalWins) {
         this.totalWins = totalWins;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

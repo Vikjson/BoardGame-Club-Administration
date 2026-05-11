@@ -7,13 +7,13 @@ import java.util.List;
 public interface MemberService {
     List<Member> getAllClubMembers();
 
-    Member getById(int id);
+    Member getById(Integer id);
 
     void createMember(Member newMember);
 
-    void deleteMember(int id);
+    void deleteMember(Integer id);
 
     Member getByEmail(String email);
 
-    void updateMember(int id, String name, String email, Boolean membershipFeePaid, Integer totalWins, Integer age);
+    void updateMember(Integer id, String name, String email, Boolean membershipFeePaid, Integer totalWins, Integer age);
 }

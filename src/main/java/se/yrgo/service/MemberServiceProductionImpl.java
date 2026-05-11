@@ -27,7 +27,7 @@ public class MemberServiceProductionImpl implements MemberService{
     }
 
     @Override
-    public Member getById(int id) {
+    public Member getById(Integer id) {
         try {
             return memberDao.getById(id);
         }
@@ -56,7 +56,7 @@ public class MemberServiceProductionImpl implements MemberService{
     }
 
     @Override
-    public void deleteMember(int id) {
+    public void deleteMember(Integer id) {
         try {
             Member memberToDelete = getById(id);
             memberDao.deleteMember(memberToDelete);
@@ -66,7 +66,7 @@ public class MemberServiceProductionImpl implements MemberService{
     }
 
     @Override
-    public void updateMember(int id, String name, String email, Boolean membershipFeePaid, Integer totalWins, Integer age) {
+    public void updateMember(Integer id, String name, String email, Boolean membershipFeePaid, Integer totalWins, Integer age) {
         Member memberToUpdate = getById(id);
 
         if (name != null) memberToUpdate.setName(name);
