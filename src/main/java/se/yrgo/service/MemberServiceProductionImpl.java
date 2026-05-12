@@ -3,7 +3,6 @@ package se.yrgo.service;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.NoResultException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.yrgo.data.MemberDao;
@@ -33,7 +32,7 @@ public class MemberServiceProductionImpl implements MemberService{
             return memberDao.getById(id);
         }
         catch (NoResultException e) {
-            throw new MemberNotFoundException("The member with id " + id + " could not be found.");
+            throw new MemberNotFoundException("The memberUpdate with id " + id + " could not be found.");
         }
     }
 
@@ -43,7 +42,7 @@ public class MemberServiceProductionImpl implements MemberService{
             return memberDao.getByEmail(email);
         }
         catch (NoResultException e) {
-            throw new MemberNotFoundException("The member with email " + email + " could not be found.");
+            throw new MemberNotFoundException("The memberUpdate with email " + email + " could not be found.");
         }
     }
 
@@ -52,7 +51,7 @@ public class MemberServiceProductionImpl implements MemberService{
         try {
             memberDao.createMember(newMember);
         } catch (EntityExistsException e) {
-            throw new RuntimeException("This member already exists.", e);
+            throw new RuntimeException("This memberUpdate already exists.", e);
         }
     }
 
@@ -62,20 +61,20 @@ public class MemberServiceProductionImpl implements MemberService{
             Member memberToDelete = getById(id);
             memberDao.deleteMember(memberToDelete);
         } catch (MemberNotFoundException e){
-            throw new MemberNotFoundException("Unable to find member:" + e.getMessage());
+            throw new MemberNotFoundException("Unable to find memberUpdate:" + e.getMessage());
         }
     }
 
     @Override
-    public void updateMember(Integer id, Member member) {
-        Member memberToUpdate = getById(id);
+    public void updateMember(Integer id, Member memberUpdate) {
+        Member memberFromDbToUpdate = getById(id);
 
-        if (member.getName() != null) memberToUpdate.setName(member.getName());
-        if (member.getEmail() != null) memberToUpdate.setEmail(member.getEmail());
-        if (member.getMembershipFeePaid() != null) memberToUpdate.setMembershipFeePaid(member.getMembershipFeePaid());
-        if (member.getTotalWins() != null) memberToUpdate.setTotalWins(member.getTotalWins());
-        if (member.getAge() != null) memberToUpdate.setAge(member.getAge());
+        if (memberUpdate.getName() != null) memberFromDbToUpdate.setName(memberUpdate.getName());
+        if (memberUpdate.getEmail() != null) memberFromDbToUpdate.setEmail(memberUpdate.getEmail());
+        if (memberUpdate.getMembershipFeePaid() != null) memberFromDbToUpdate.setMembershipFeePaid(memberUpdate.getMembershipFeePaid());
+        if (memberUpdate.getTotalWins() != null) memberFromDbToUpdate.setTotalWins(memberUpdate.getTotalWins());
+        if (memberUpdate.getAge() != null) memberFromDbToUpdate.setAge(memberUpdate.getAge());
 
-        memberDao.updateMember(memberToUpdate);
+        memberDao.updateMember(memberFromDbToUpdate);
     }
 }
