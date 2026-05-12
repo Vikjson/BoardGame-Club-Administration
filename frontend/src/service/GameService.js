@@ -11,9 +11,13 @@ class GameService {
         return json.map(game => new Game(game))
     }
 
-    //async create(game) {
-    //    await this.apiService.postData('/games', game)
-    //}
+    async getById(id) {
+        return await this.apiService.getData(`/games/${id}`)
+    }
+
+    async getByName(name) {
+        return await this.apiService.getData(`/games/name/${name}`)
+    }
 
     async create(game) {
         return await this.apiService.postData('/games', game)
