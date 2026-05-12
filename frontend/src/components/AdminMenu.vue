@@ -2,7 +2,7 @@
   <nav class="admin-menu">
 
     <button @click="$emit('change-page', 'home')">
-      Home
+      Hem
     </button>
 
     <button @click="$emit('change-page', 'members')">
@@ -39,6 +39,12 @@ button {
   cursor: pointer;
   background-color:  #333333;
   border-color: #666666;
+  margin:0rem;
+}
+
+button:hover {
+  background-color: #ac3939;
+  border-color: #666;
 }
 </style>
 <script setup lang="ts">

@@ -77,12 +77,21 @@ function calculateTopWinners(sessions) {
 
 <style scoped>
 .statistics-view {
+  background-attachment: fixed;
   padding: 2rem;
+  min-height: 100vh;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6),
+  rgba(0, 0, 0, 0.6)),
+  url('../assets/2h-media-hH3JuONz7CQ-unsplash.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .stats-card {
@@ -90,7 +99,7 @@ function calculateTopWinners(sessions) {
   padding: 1.5rem;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background: #333333;
+  background-color: rgba(51, 51, 51, 0.9);
   width: 100%;
   max-width: 400px;
 }

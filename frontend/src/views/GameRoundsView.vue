@@ -181,24 +181,26 @@ function closeForm() {
     <form v-if="showForm && editingId === null" class="session-form" @submit.prevent="saveSession">
       <h3>{{ editingId === null ? 'Ny spelomgång' : 'Redigera spelomgång' }}</h3>
 
-      <label>
-        Spel
-        <select v-model.number="formSession.gameId" required>
-          <option disabled value="">Välj spel</option>
-          <option
-              v-for="game in games"
-              :key="game.gameId"
-              :value="game.gameId"
-          >
-            {{ game.gameName }}
-          </option>
-        </select>
-      </label>
+      <div class="session-main-fields">
+        <label>
+          Spel
+          <select v-model.number="formSession.gameId" required>
+            <option disabled value="">Välj spel</option>
+            <option
+                v-for="game in games"
+                :key="game.gameId"
+                :value="game.gameId"
+            >
+              {{ game.gameName }}
+            </option>
+          </select>
+        </label>
 
-      <label>
-        Datum
-        <input v-model="formSession.date" type="date" required>
-      </label>
+        <label>
+          Datum
+          <input v-model="formSession.date" type="date" required>
+        </label>
+      </div>
 
       <h4>Deltagare</h4>
 
@@ -258,24 +260,26 @@ function closeForm() {
       <form v-if="showForm && editingId === session.sessionId" class="session-form" @submit.prevent="submitSession">
         <h3>{{ editingId === null ? 'Ny spelomgång' : 'Redigera spelomgång' }}</h3>
 
-        <label>
-          Spel
-          <select v-model.number="formSession.gameId" required>
-            <option disabled value="">Välj spel</option>
-            <option
-                v-for="game in games"
-                :key="game.gameId"
-                :value="game.gameId"
-            >
-              {{ game.gameName }}
-            </option>
-          </select>
-        </label>
+        <div class="session-main-fields">
+          <label>
+            Spel
+            <select v-model.number="formSession.gameId" required>
+              <option disabled value="">Välj spel</option>
+              <option
+                  v-for="game in games"
+                  :key="game.gameId"
+                  :value="game.gameId"
+              >
+                {{ game.gameName }}
+              </option>
+            </select>
+          </label>
 
-        <label>
-          Datum
-          <input v-model="formSession.date" type="date" required>
-        </label>
+          <label>
+            Datum
+            <input v-model="formSession.date" type="date" required>
+          </label>
+        </div>
 
         <h4>Deltagare</h4>
 
@@ -308,6 +312,7 @@ function closeForm() {
             Vinnare
           </label>
 
+
           <button type="button" @click="removeParticipant(index)">
             Ta bort deltagare
           </button>
@@ -325,6 +330,7 @@ function closeForm() {
             Avbryt
           </button>
         </div>
+
       </form>
 
 
@@ -370,21 +376,42 @@ function closeForm() {
 
 <style scoped>
 .game-rounds-view {
+  background-attachment: fixed;
+  min-height: 100vh;
   padding: 1rem;
   color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6),
+  rgba(0, 0, 0, 0.6)),
+  url('../assets/2h-media-hH3JuONz7CQ-unsplash.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .session-form {
-  margin-top: 1rem;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
+  margin-top: 0.5rem;
+  padding: 0.4rem;
+
+  min-width: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #333333;
 }
+
+.session-main-fields {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
 
 label {
   display: flex;
@@ -393,7 +420,8 @@ label {
   margin-bottom: 0.75rem;
 }
 
-input {
+input,
+select {
   margin-top: 0.25rem;
   width: 200px;
 }
@@ -427,7 +455,7 @@ button {
   padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background: #333333;
+  background-color: rgba(51, 51, 51, 0.9);
 }
 
 .session-header {
@@ -452,15 +480,14 @@ button {
   gap: 0.75rem;
   margin: 0.2rem 0.5rem;
   font-size: 0.8rem;
-  color: black;
+  color: #DBE2D5;
 }
 
 .game-info span {
   padding: 0.35rem 0.6rem;
-  border: 1px solid #ddd;
   border-radius: 999px;
   font-size: 0.9rem;
-  background-color: #bfbfbf;
+  background-color: #5C6E4B;
 }
 
 .session-actions {
@@ -481,9 +508,6 @@ td {
   text-align: center;
 }
 
-button {
-  padding: 0.4rem 0.7rem;
-}
 
 input,
 select {
