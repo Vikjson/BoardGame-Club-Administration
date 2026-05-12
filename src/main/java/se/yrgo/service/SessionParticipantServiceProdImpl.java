@@ -80,11 +80,17 @@ public class SessionParticipantServiceProdImpl implements SessionParticipantServ
 
     @Override
     public SessionParticipant getById(int participantId) {
-        SessionParticipant sp = sessionParticipantDao.getById(participantId);
-        if (sp == null) {
+        try {
+            SessionParticipant sp =
+                    sessionParticipantDao.getById(participantId);
+
+            if (sp == null) {
+                throw new EntityNotFoundException("Participant not found");
+            }
+            return sp;
+        } catch (NoResultException e) {
             throw new EntityNotFoundException("Participant not found");
         }
-        return sp;
     }
 
     @Override
