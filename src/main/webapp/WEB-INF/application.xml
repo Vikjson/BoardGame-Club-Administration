@@ -45,8 +45,8 @@
     </bean>
 
 
-    <!--    <aop:aspectj-autoproxy/>-->
+    <aop:aspectj-autoproxy/>
     <tx:annotation-driven/>
-    <context:component-scan base-package="se.yrgo.data, se.yrgo.domain, se.yrgo.service"/>
+    <context:component-scan base-package="se.yrgo.data, se.yrgo.domain, se.yrgo.service, se.yrgo.advice"/>
 
 </beans>
