@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import se.yrgo.domain.Game;
 import se.yrgo.domain.GameSession;
+import se.yrgo.service.GameService;
 import se.yrgo.service.GameSessionService;
 
 import java.time.LocalDate;
@@ -12,6 +14,20 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * REST controller for managing GameSession resources.
+ * <p>
+ * Provides HTTP endpoints for retrieving, creating, updating, and deleting
+ * {@link GameSession} entities. Acts as the entry point between the client and
+ * the {@link GameSessionService} layer.
+ * <p>
+ * Delegates all business logic to the service layer and is responsible for:
+ * <ul>
+ *     <li>Handling HTTP requests and responses</li>
+ *     <li>Validating basic input parameters</li>
+ *     <li>Mapping service exceptions to HTTP responses</li>
+ * </ul>
+ */
 @RestController
 @RequestMapping("/gamesessions")
 @CrossOrigin(origins = "http://localhost:5173")

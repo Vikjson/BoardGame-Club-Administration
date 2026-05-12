@@ -8,6 +8,12 @@ import se.yrgo.domain.SessionParticipant;
 
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) implementation for {@link SessionParticipant}.
+ * <p>
+ * Provides database operations for managing SessionParticipant entities using JPA EntityManager.
+ * This class handles basic CRUD operations such as create, read, update, and delete.
+ */
 @Repository
 public class SessionParticipantDaoMssqlImpl implements SessionParticipantDao {
     @PersistenceContext

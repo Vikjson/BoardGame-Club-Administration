@@ -23,7 +23,7 @@ public class LogMethod {
 
             System.out.println("LOG Method "
                     + method.getSignature().getName()
-                    + " executed successfully");
+                    + " finished execution");
             return value;
         } catch (Throwable throwable) {
             System.out.println(

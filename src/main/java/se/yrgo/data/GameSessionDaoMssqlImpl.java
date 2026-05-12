@@ -9,6 +9,12 @@ import se.yrgo.domain.GameSession;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) implementation for {@link GameSession}.
+ * <p>
+ * Provides database operations for managing GameSession entities using JPA EntityManager.
+ * This class handles basic CRUD operations such as create, read, update, and delete.
+ */
 @Repository
 public class GameSessionDaoMssqlImpl implements GameSessionDao{
     

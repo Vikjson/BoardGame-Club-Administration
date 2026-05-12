@@ -7,6 +7,12 @@ import se.yrgo.domain.Member;
 
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) implementation for {@link Member}.
+ * <p>
+ * Provides database operations for managing Member entities using JPA EntityManager.
+ * This class handles basic CRUD operations such as create, read, update, and delete.
+ */
 @Repository
 public class MemberDaoMssqlImpl implements MemberDao {
     @PersistenceContext

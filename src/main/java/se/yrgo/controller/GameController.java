@@ -12,6 +12,20 @@ import se.yrgo.service.GameService;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * REST controller for managing Game resources.
+ * <p>
+ * Provides HTTP endpoints for retrieving, creating, updating, and deleting
+ * {@link Game} entities. Acts as the entry point between the client and
+ * the {@link GameService} layer.
+ * <p>
+ * Delegates all business logic to the service layer and is responsible for:
+ * <ul>
+ *     <li>Handling HTTP requests and responses</li>
+ *     <li>Validating basic input parameters</li>
+ *     <li>Mapping service exceptions to HTTP responses</li>
+ * </ul>
+ */
 @RestController
 @RequestMapping("/games")
 @CrossOrigin(origins = "http://localhost:5173")
