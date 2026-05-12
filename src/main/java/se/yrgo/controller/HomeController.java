@@ -12,6 +12,6 @@ public class HomeController {
     @GetMapping
     public String testHome(){
         System.out.println("Reached HomeController!");
-        return "Testing HomeController";
+        return "Welcome!";
     }
 }

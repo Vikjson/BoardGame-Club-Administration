@@ -4,6 +4,8 @@ DB_IMAGE="mcr.microsoft.com/mssql/server"
 DB_IMAGE_WITH_VERSION="mcr.microsoft.com/mssql/server:2019-latest"
 MSSQL_CONTAINER_NAME="mssql-boardgames"
 DB_PASSWORD="yrgoP4ssword"
+SQL_SCRIPT="boardGameClub_TestDB.sql"
+DB_INIT_SCRIPT="init-db.sh"
 
 if ! docker images | grep -q "$DB_IMAGE"; then
 echo "Pulling SQL Server docker image"
@@ -19,4 +21,12 @@ fi
 
 docker run -d -p 32772:8080 --name "$TOMCAT_CONTAINER_NAME" tomcat
 
-#TODO: Init DB tables etc?
+
+docker cp "$SQL_SCRIPT" "$MSSQL_CONTAINER_NAME":/usr/
+docker cp "$DB_INIT_SCRIPT" "$MSSQL_CONTAINER_NAME":/usr/
+docker exec -it "$MSSQL_CONTAINER_NAME" sh -c "./usr/$DB_INIT_SCRIPT"
+
+exit
+
+cd frontend/
+npm install

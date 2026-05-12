@@ -3,6 +3,7 @@ package se.yrgo.service;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.NoResultException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.yrgo.data.MemberDao;
@@ -27,7 +28,7 @@ public class MemberServiceProductionImpl implements MemberService{
     }
 
     @Override
-    public Member getById(int id) {
+    public Member getById(Integer id) {
         try {
             return memberDao.getById(id);
         }
@@ -56,24 +57,24 @@ public class MemberServiceProductionImpl implements MemberService{
     }
 
     @Override
-    public void deleteMember(int id) {
+    public void deleteMember(Integer id) {
         try {
             Member memberToDelete = getById(id);
             memberDao.deleteMember(memberToDelete);
         } catch (MemberNotFoundException e){
-            throw new MemberNotFoundException("Unable to delete:" + e.getMessage());
+            throw new MemberNotFoundException("Unable to find member:" + e.getMessage());
         }
     }
 
     @Override
-    public void updateMember(int id, String name, String email, Boolean membershipFeePaid, Integer totalWins, Integer age) {
+    public void updateMember(Integer id, Member member) {
         Member memberToUpdate = getById(id);
 
-        if (name != null) memberToUpdate.setName(name);
-        if (email != null) memberToUpdate.setEmail(email);
-        if (membershipFeePaid != null) memberToUpdate.setMembershipFeePaid(membershipFeePaid);
-        if (totalWins != null) memberToUpdate.setTotalWins(totalWins);
-        if (age != null) memberToUpdate.setAge(age);
+        if (member.getName() != null) memberToUpdate.setName(member.getName());
+        if (member.getEmail() != null) memberToUpdate.setEmail(member.getEmail());
+        if (member.getMembershipFeePaid() != null) memberToUpdate.setMembershipFeePaid(member.getMembershipFeePaid());
+        if (member.getTotalWins() != null) memberToUpdate.setTotalWins(member.getTotalWins());
+        if (member.getAge() != null) memberToUpdate.setAge(member.getAge());
 
         memberDao.updateMember(memberToUpdate);
     }

@@ -1,11 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue'
+import {ref, computed} from 'vue'
 import MemberService from "../service/MemberService.js";
+import {Member} from "../entities/Member.js";
 
-// const members = ref([
-//   { id: 1, firstName: 'Anna', lastName: 'Andersson', email: 'anna@mail.com', paid: true },
-//   { id: 2, firstName: 'Bo', lastName: 'Bengtsson', email: 'bo@mail.com', paid: false }
-// ])
 
 const members = ref([])
 getMembers();
@@ -15,11 +12,12 @@ const editingId = ref(null)
 const showOnlyUnpaid = ref(false)
 
 const formMember = ref({
-  id: '',
-  name: '',
+  memberId: '',
+  firstName: '',
+  lastName: '',
   totalWins: '',
   email: '',
-  paid: false,
+  membershipFeePaid: false,
   age: '',
 })
 
@@ -31,48 +29,46 @@ const visibleMembers = computed(() => {
   return members.value.filter(member => !member.membershipFeePaid)
 })
 
-async function getMembers(){
+async function getMembers() {
   const memberService = new MemberService();
   members.value = await memberService.getAll();
 }
 
 function openAddForm() {
   editingId.value = null
-  formMember.value = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    paid: false
-  }
   showForm.value = true
 }
 
-function openEditForm(member) {
-  editingId.value = member.id
-  formMember.value = { ...member }
+async function openEditForm(member) {
+  const service = new MemberService();
+  const memberFromDB = await service.getByEmail(member.email);
+  console.log('member id: ' + memberFromDB.memberId);
+
+  editingId.value = memberFromDB.memberId;
+  formMember.value = {...member}
   showForm.value = true
 }
 
-function saveMember() {
+async function saveMember() {
+  const service = new MemberService();
+  const memberFromForm = new Member(formMember.value)
+
   if (editingId.value === null) {
-    members.value.push({
-      id: Date.now(),
-      ...formMember.value
-    })
+    await service.registerNewMember(memberFromForm);
   } else {
-    const index = members.value.findIndex(member => member.id === editingId.value)
-
-    members.value[index] = {
-      id: editingId.value,
-      ...formMember.value
-    }
+    await service.updateMember(editingId.value, memberFromForm);
   }
 
-  closeForm()
+  members.value = await service.getAll();
+  closeForm();
 }
 
-function deleteMember(memberId) {
-  members.value = members.value.filter(member => member.id !== memberId)
+async function deleteMember(email) {
+  const service = new MemberService();
+  const member = await service.getByEmail(email);
+  await service.deleteMember(member.memberId);
+
+  members.value = await service.getAll();
 }
 
 function closeForm() {
@@ -96,13 +92,8 @@ function closeForm() {
       <h3>{{ editingId === null ? 'Lägg till medlem' : 'Redigera medlem' }}</h3>
 
       <label>
-        Förnamn
-        <input v-model="formMember.firstName" type="text" required>
-      </label>
-
-      <label>
-        Efternamn
-        <input v-model="formMember.lastName" type="text" required>
+        För- och efternamn
+        <input v-model="formMember.name" type="text" required>
       </label>
 
       <label>
@@ -110,8 +101,13 @@ function closeForm() {
         <input v-model="formMember.email" type="email" required>
       </label>
 
+      <label>
+        Ålder
+        <input v-model="formMember.age" type="number" required>
+      </label>
+
       <label class="checkbox-label">
-        <input v-model="formMember.paid" type="checkbox">
+        <input v-model="formMember.membershipFeePaid" type="checkbox">
         Har betalat medlemskapet
       </label>
 
@@ -138,7 +134,7 @@ function closeForm() {
         <td>{{ member.membershipFeePaid ? 'Ja' : 'Nej' }}</td>
         <td>
           <button @click="openEditForm(member)">Redigera</button>
-          <button @click="deleteMember(member.memberId)">Ta bort</button>
+          <button @click="deleteMember(member.email)">Ta bort</button>
         </td>
       </tr>
       </tbody>
