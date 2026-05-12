@@ -370,13 +370,20 @@ function closeForm() {
 
 <style scoped>
 .game-rounds-view {
-  padding: 2rem;
+  padding: 1rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .session-form {
-  margin-top: 1.5rem;
-  padding: 1rem;
+  margin-top: 1rem;
+  padding: 0.8rem;
   border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 label {
@@ -392,11 +399,21 @@ input {
 }
 
 .participant-row {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.3rem;
+  gap: 0.6rem;
 }
 
 .form-actions {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 button {
@@ -404,11 +421,13 @@ button {
 }
 
 .session-card {
-  margin-top: 1.5rem;
-  padding: 1.5rem;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 1rem;
+  padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background: white;
+  background: #333333;
 }
 
 .session-header {
@@ -418,19 +437,22 @@ button {
   gap: 1rem;
 }
 
-.session-header h3 {
+.session-header h3, h4 {
   margin: 0;
 }
 
 .session-header p {
   margin: 0.25rem 0 0;
+  text-align: center;
 }
 
 .game-info {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin: 1rem 0;
+  margin: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  color: black;
 }
 
 .game-info span {
@@ -438,6 +460,7 @@ button {
   border: 1px solid #ddd;
   border-radius: 999px;
   font-size: 0.9rem;
+  background-color: #bfbfbf;
 }
 
 .session-actions {
@@ -454,7 +477,29 @@ table {
 th,
 td {
   border: 1px solid #ddd;
-  padding: 0.75rem;
+  padding: 0.45rem;
   text-align: center;
 }
+
+button {
+  padding: 0.4rem 0.7rem;
+}
+
+input,
+select {
+  padding: 0.35rem;
+}
+
+h2 {
+  margin-bottom: 0.5rem;
+}
+
+h3 {
+  margin-bottom: 0.3rem;
+}
+
+h4 {
+  margin-bottom: 0.3rem;
+}
+
 </style>

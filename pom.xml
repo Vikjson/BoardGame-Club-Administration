@@ -140,6 +140,14 @@
             <version>3.1.3</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- Aspectj -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.24</version>
+        </dependency>
+
     </dependencies>
 
     <build>
