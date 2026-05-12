@@ -143,20 +143,36 @@ function closeForm() {
 
 <style scoped>
 .members-view {
+  background-attachment: fixed;
   padding: 2rem;
-}
+  min-height: 100vh;
 
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6),
+  rgba(0, 0, 0, 0.6)),
+  url('../assets/2h-media-hH3JuONz7CQ-unsplash.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.members-view h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
 .actions,
 .form-actions {
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
+  justify-content: center;
 }
 
 .member-form {
+  max-width: 420px;
+  margin: 0 auto 1.5rem auto;
   border: 1px solid #ddd;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background-color: rgba(51, 51, 51, 0.9);
+  border-radius: 12px;
 }
 
 label {
@@ -168,7 +184,9 @@ label {
 
 input {
   margin-top: 0.25rem;
-  width: 200px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem;
 }
 
 .checkbox-label {
@@ -181,9 +199,18 @@ input {
   margin-top: 0;
 }
 
+.members-view > h2,
+.members-view > .actions,
+.members-view > table {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
+  background-color: rgba(51, 51, 51, 0.9);
 }
 
 th,
