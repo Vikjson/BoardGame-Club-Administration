@@ -19,7 +19,7 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int gameId;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String gameName;
     @Column(nullable = false)
     private LocalDate purchaseDate;
