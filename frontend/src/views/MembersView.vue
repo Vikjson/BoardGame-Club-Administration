@@ -42,7 +42,6 @@ function openAddForm() {
 async function openEditForm(member) {
   const service = new MemberService();
   const memberFromDB = await service.getByEmail(member.email);
-  console.log('member id: ' + memberFromDB.memberId);
 
   editingId.value = memberFromDB.memberId;
   formMember.value = {...member}

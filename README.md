@@ -43,3 +43,6 @@ To see logs from the application, either run this command in a terminal:
    > docker logs -f tomcat-container
 
 Or open the Docker Desktop app and navigate to the container named _tomcat-container_. In the 'Logs' section you will be able to see all log messages from the application. 
+
+## Troubleshooting
+If any of the scripts fail in any way, make sure you have preserved Unix line endings (LF) in the script files.
