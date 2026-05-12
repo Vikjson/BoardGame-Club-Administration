@@ -8,8 +8,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import se.yrgo.domain.Game;
 import se.yrgo.domain.GameSession;
+import se.yrgo.domain.Member;
+import se.yrgo.domain.SessionParticipant;
+import se.yrgo.error.GameSessionDeleteException;
+import se.yrgo.error.GameSessionNotFoundException;
 import se.yrgo.service.GameService;
 import se.yrgo.service.GameSessionService;
+import se.yrgo.service.MemberService;
+import se.yrgo.service.SessionParticipantService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +28,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameSessionIntegrationTest {
     @Autowired
     private GameSessionService gameSessionService;
+
+    @Autowired
+    private MemberService memberService;
+
+    @Autowired
+    private SessionParticipantService sessionParticipantService;
 
     @Autowired
     private GameService gameService;
@@ -94,8 +106,30 @@ public class GameSessionIntegrationTest {
         assertNotNull(savedSession.getSessionId());
 
         gameSessionService.deleteGameSession(savedSession.getSessionId());
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(GameSessionNotFoundException.class, () ->
                 gameSessionService.getById(savedSession.getSessionId()));
+    }
+
+    @Test
+    public void testDeleteGameSessionWithParticipants() {
+
+        Game game = createGame();
+        Member member = new Member("Frodo Baggins", "frodo@shire.com", true, 250, 33);
+        memberService.createMember(member);
+        Member savedMember = memberService.getByEmail(member.getEmail());
+        LocalDate now = LocalDate.now();
+
+        GameSession savedSession = gameSessionService.createGameSession(game.getGameId(), now);
+
+        SessionParticipant participant = new SessionParticipant();
+        participant.setGameSession(savedSession);
+        participant.setMember(savedMember);
+        participant.setScore(10);
+        participant.setWinner(true);
+        sessionParticipantService.createSessionParticipant(participant);
+
+        assertThrows(GameSessionDeleteException.class, () ->
+                gameSessionService.deleteGameSession(savedSession.getSessionId()));
     }
 
     @Test
@@ -103,7 +137,7 @@ public class GameSessionIntegrationTest {
         Game gameOriginal = createGame();
         Game gameToReplaceWith = createGame2();
         LocalDate now = LocalDate.now();
-        var savedSession = gameSessionService.createGameSession(gameOriginal.getGameId(), now);
+        GameSession savedSession = gameSessionService.createGameSession(gameOriginal.getGameId(), now);
 
         assertNotNull(savedSession.getSessionId());
         assertEquals(gameOriginal, savedSession.getGame());

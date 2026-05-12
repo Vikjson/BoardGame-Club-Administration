@@ -89,12 +89,7 @@ public class SessionParticipantServiceProdImpl implements SessionParticipantServ
 
     @Override
     public List<SessionParticipant> getBySessionId(int sessionId) {
-        List<SessionParticipant> sessionParticipants = sessionParticipantDao.getBySessionId(sessionId);
-
-        if (sessionParticipants.isEmpty()) {
-            throw new EntityNotFoundException("No participants are registered in database.");
-        }
-        return sessionParticipants;
+        return sessionParticipantDao.getBySessionId(sessionId);
     }
 
     @Override

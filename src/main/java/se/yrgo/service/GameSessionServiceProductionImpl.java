@@ -9,7 +9,9 @@ import se.yrgo.data.GameDao;
 import se.yrgo.data.GameSessionDao;
 import se.yrgo.domain.Game;
 import se.yrgo.domain.GameSession;
+import se.yrgo.domain.SessionParticipant;
 import se.yrgo.error.GameSessionDeleteException;
+import se.yrgo.error.GameSessionNotFoundException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,13 +34,19 @@ import java.util.List;
 @Service
 public class GameSessionServiceProductionImpl implements GameSessionService {
 
-    private GameSessionDao gameSessionDao;
-    private GameDao gameDao;
+    private final GameSessionDao gameSessionDao;
+    private final GameDao gameDao;
+    private final SessionParticipantService sessionParticipantService;
 
     @Autowired
-    public GameSessionServiceProductionImpl(GameSessionDao gameSessionDao, GameDao gameDao) {
+    public GameSessionServiceProductionImpl(
+            GameSessionDao gameSessionDao,
+            GameDao gameDao,
+            SessionParticipantService sessionParticipantService) {
+
         this.gameSessionDao = gameSessionDao;
         this.gameDao = gameDao;
+        this.sessionParticipantService = sessionParticipantService;
     }
 
     @Override
@@ -51,7 +59,7 @@ public class GameSessionServiceProductionImpl implements GameSessionService {
         try {
             return gameSessionDao.getById(id);
         } catch (NoResultException e) {
-            throw new RuntimeException("The game session with id " + id + " could not be found.");
+            throw new GameSessionNotFoundException("The game session with id " + id + " could not be found.");
         }
     }
 
@@ -90,15 +98,19 @@ public class GameSessionServiceProductionImpl implements GameSessionService {
     @Override
     public void deleteGameSession(int id) {
         try {
+            gameSessionDao.getById(id);
+
+            List<SessionParticipant> participants =
+                    sessionParticipantService.getBySessionId(id);
+
+            if (!participants.isEmpty()) {
+                throw new GameSessionDeleteException("Cannot delete game session because it has participants connected to it.");
+            }
+
             gameSessionDao.delete(id);
 
         } catch (NoResultException e) {
-            throw new RuntimeException("The game session with id " + id + " could not be deleted because it does not exist.");
-        } catch (Exception e) {
-
-            throw new GameSessionDeleteException(
-                    "Cannot delete game session because it has participants connected to it."
-            );
+            throw new GameSessionNotFoundException("The game session with id " + id + " could not be deleted because it does not exist.");
         }
     }
 }
