@@ -10,13 +10,8 @@ import java.util.List;
 
 @Repository
 public class SessionParticipantDaoMssqlImpl implements SessionParticipantDao {
-    private final HttpSession httpSession;
     @PersistenceContext
     private EntityManager em;
-
-    public SessionParticipantDaoMssqlImpl(HttpSession httpSession) {
-        this.httpSession = httpSession;
-    }
 
     @Override
     public void createSessionParticipant(SessionParticipant sessionParticipant) {
