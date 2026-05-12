@@ -12,7 +12,7 @@ import se.yrgo.error.GameNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 
-@Service("gameService")
+@Service()
 @Transactional
 public class GameServiceProductionImpl implements GameService {
     private final GameDao gameDao;
