@@ -39,3 +39,7 @@ When the script has finished, it may take a minute for the Tomcat container to s
    > http://localhost:5173/
  
 Now everything should be running, and you can try the application. The next time you wish to start the application you can follow the above steps, but skip the _install.sh_ script, which is only necessary to run once. 
+To see logs from the application, either run this command in a terminal: 
+   > docker logs -f tomcat-container
+
+Or open the Docker Desktop app and navigate to the container named _tomcat-container_. In the 'Logs' section you will be able to see all log messages from the application. 
