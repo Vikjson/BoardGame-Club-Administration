@@ -9,25 +9,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogMethod {
     @Around(
-            "execution(* se.yrgo.controller.*.*(..)) || " +
-                    "execution(* se.yrgo.service.*.*(..))")
+            "execution(* se.yrgo.controller..*(..)) || " +
+                    "execution(* se.yrgo.service..*(..))")
     public Object logMethodCall(ProceedingJoinPoint method) throws Throwable {
 
         System.out.println(
-                "[LOG] Calling method "
+                "LOG Calling method "
                         + method.getSignature().getName()
                         + " from class "
                         + method.getTarget().getClass().getName());
         try {
             Object value = method.proceed();
 
-            System.out.println("[LOG] Method "
+            System.out.println("LOG Method "
                     + method.getSignature().getName()
                     + " executed successfully");
             return value;
         } catch (Throwable throwable) {
             System.out.println(
-                    "[ERROR] Method "
+                    "ERROR Method "
                             + method.getSignature().getName()
                             + " threw exception: "
                             + throwable.getMessage());
