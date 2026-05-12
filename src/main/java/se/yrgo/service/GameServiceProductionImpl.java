@@ -12,6 +12,20 @@ import se.yrgo.error.GameNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Production implementation of {@link GameService}.
+ * <p>
+ * Provides business logic for managing Game entities including retrieval,
+ * creation, updating, and deletion operations.
+ * Acts as an intermediary layer between controllers and the DAO layer.
+ * <p>
+ * This service is also responsible for:
+ * <ul>
+ *     <li>Mapping persistence-layer exceptions into application-specific exceptions</li>
+ *     <li>Validating business rules before delegating to DAO</li>
+ *     <li>Managing transactional operations</li>
+ * </ul>
+ */
 @Service()
 @Transactional
 public class GameServiceProductionImpl implements GameService {

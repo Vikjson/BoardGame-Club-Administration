@@ -7,6 +7,12 @@ import se.yrgo.domain.Game;
 
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) implementation for {@link Game}.
+ * <p>
+ * Provides database operations for managing Game entities using JPA EntityManager.
+ * This class handles basic CRUD operations such as create, read, update, and delete.
+ */
 @Repository
 public class GameDaoMssqlImpl implements GameDao {
     @PersistenceContext

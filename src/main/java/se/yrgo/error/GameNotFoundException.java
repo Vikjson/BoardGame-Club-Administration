@@ -1,5 +1,8 @@
 package se.yrgo.error;
 
+/**
+ * Thrown when a requested Game cannot be found in the database.
+ */
 public class GameNotFoundException extends RuntimeException {
     public GameNotFoundException() {
 
