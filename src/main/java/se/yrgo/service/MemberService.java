@@ -15,5 +15,5 @@ public interface MemberService {
 
     Member getByEmail(String email);
 
-    void updateMember(Integer id, Member member);
+    void updateMember(Integer id, Member memberUpdate);
 }
