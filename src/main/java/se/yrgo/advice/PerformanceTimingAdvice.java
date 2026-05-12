@@ -11,6 +11,7 @@ public class PerformanceTimingAdvice {
 
     @Around("execution(* se.yrgo.service..*(..)) || execution(* se.yrgo.data..*(..))")
     public Object measureMethodTime(ProceedingJoinPoint pjp) throws Throwable {
+        System.out.println("ASPECT RUNNING");
 
         long start = System.currentTimeMillis();
 
