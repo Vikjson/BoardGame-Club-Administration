@@ -32,7 +32,7 @@ public class MemberServiceProductionImpl implements MemberService{
             return memberDao.getById(id);
         }
         catch (NoResultException e) {
-            throw new MemberNotFoundException("The memberUpdate with id " + id + " could not be found.");
+            throw new MemberNotFoundException("The member with id " + id + " could not be found.");
         }
     }
 
@@ -42,7 +42,7 @@ public class MemberServiceProductionImpl implements MemberService{
             return memberDao.getByEmail(email);
         }
         catch (NoResultException e) {
-            throw new MemberNotFoundException("The memberUpdate with email " + email + " could not be found.");
+            throw new MemberNotFoundException("The member with email " + email + " could not be found.");
         }
     }
 
@@ -51,7 +51,7 @@ public class MemberServiceProductionImpl implements MemberService{
         try {
             memberDao.createMember(newMember);
         } catch (EntityExistsException e) {
-            throw new RuntimeException("This memberUpdate already exists.", e);
+            throw new RuntimeException("This member already exists.", e);
         }
     }
 
@@ -61,7 +61,7 @@ public class MemberServiceProductionImpl implements MemberService{
             Member memberToDelete = getById(id);
             memberDao.deleteMember(memberToDelete);
         } catch (MemberNotFoundException e){
-            throw new MemberNotFoundException("Unable to find memberUpdate:" + e.getMessage());
+            throw new MemberNotFoundException("Unable to find member:" + e.getMessage());
         }
     }
 
