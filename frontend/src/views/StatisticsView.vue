@@ -90,7 +90,7 @@ function calculateTopWinners(sessions) {
   padding: 1.5rem;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background: white;
+  background: #333333;
   width: 100%;
   max-width: 400px;
 }
